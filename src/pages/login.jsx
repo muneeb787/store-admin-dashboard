@@ -14,11 +14,11 @@ const Login = () => {
 
     const navigate = useNavigate()
 
-    useEffect(() => {
-        if (localStorage.getItem('token') && localStorage.getItem('token') != "undefined" ) {
-            navigate('/dashboard')
-        }
-    }, [])
+    // useEffect(() => {
+    //     if (localStorage.getItem('token') && localStorage.getItem('token') != "undefined" ) {
+    //         navigate('/dashboard')
+    //     }
+    // }, [])
 
     const formik = useFormik({
         initialValues: {
