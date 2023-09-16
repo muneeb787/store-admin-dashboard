@@ -6,6 +6,11 @@ export const NonLayoutRoutes = [
         path: "*",
         element: <>Hellow</> 
     }
+    {
+        title: "welcome",
+        path: "/",
+        element: <>welcome</> 
+    }
     // {
     //     title: "def",
     //     path: "*",
