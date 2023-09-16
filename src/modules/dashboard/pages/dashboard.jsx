@@ -17,10 +17,11 @@ const Dashboard = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined" ) {
+        if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
             navigate('/login')
         }
     }, [])
+
     return (
         <>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
