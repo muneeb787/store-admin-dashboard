@@ -5,7 +5,7 @@ export const NonLayoutRoutes = [
         title: "404",
         path: "*",
         element: <>Hellow</> 
-    }
+    },
     {
         title: "welcome",
         path: "/",
