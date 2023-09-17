@@ -2,34 +2,49 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../../../components/lodaer';
 import useAxios from '../../../hooks/axios';
 import { useNavigate } from 'react-router-dom';
-
+import ViewOrder from './viewOrder';
 const OrderIndex = () => {
   const [orders, setOrders] = useState([]);
   const [loader, setLoader] = useState(true);
+  const [dataFetched, setDataFetched] = useState(false);
   const navigate = useNavigate();
   const axiosInstance = useAxios();
 
   useEffect(() => {
-    //Fetch Data
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get('/orders');
+        console.log(response.data);
         setOrders(response.data.getAllOrder);
+        setDataFetched(true); // new line added
+        setLoader(false); // new line of code for non-repeatition of fetching
       } catch (error) {
         console.error('Error fetching Data', error);
       } finally {
         setLoader(false);
       }
     };
+    if (!dataFetched) {
+      // new line
+      fetchData();
+    }
+  }, [axiosInstance, dataFetched]);
 
-    fetchData();
-  }, [axiosInstance]);
-
+  const handleViewOrder = (orderId) => {
+    navigate(`/order/view/${orderId}`);
+  };
   const handleDeleteOrder = async (orderId) => {
+    console.log('Deleting order with ID:', orderId);
     try {
-      await axiosInstance.delete(`/orders/${orderId}`);
-      // Remove the deleted order from the list
+      await axiosInstance.delete(`/delete/${orderId}`);
+      // const isOrderDeleted = orders.some((order) => order._id === orderId);
+      // if(isOrderDeleted) {
       setOrders(orders.filter((order) => order._id !== orderId));
+      console.log('Order deleted successfully');
+      // }
+      // else {
+      //   console.log('Order not found or already deleted');
+      // }
     } catch (error) {
       console.error('Error deleting order', error);
     }
@@ -67,7 +82,7 @@ const OrderIndex = () => {
               </thead>
               <tbody>
                 {orders.map((order, index) => {
-                  
+                  return (
                     <tr key={order._id}>
                       <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                         <h5 className="font-medium text-black dark:text-white">
@@ -97,7 +112,10 @@ const OrderIndex = () => {
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <div className="flex items-center space-x-3.5">
-                          <button className="hover:text-primary">
+                          <button
+                            className="hover:text-primary"
+                            onClick={() => handleViewOrder(order._id)}
+                          >
                             <svg
                               className="fill-current"
                               width="18"
@@ -115,13 +133,14 @@ const OrderIndex = () => {
                                 fill=""
                               />
                             </svg>
+                            View
                           </button>
                           {/*Delete Button */}
                           <button
                             className="hover:text-primary"
                             onClick={() => handleDeleteOrder(order._id)}
                           >
-                            Delete
+                           
                             <svg
                               className="fill-current"
                               width="18"
@@ -147,6 +166,7 @@ const OrderIndex = () => {
                                 fill=""
                               />
                             </svg>
+                            Delete
                           </button>
                           {/* <button
                               onClick={() =>
@@ -175,7 +195,7 @@ const OrderIndex = () => {
                         </div>
                       </td>
                     </tr>
-                  
+                  );
                 })}
               </tbody>
             </table>

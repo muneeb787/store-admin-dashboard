@@ -1,6 +1,5 @@
 import OrderIndex from "./pages"
 import UpdateOrder from "./pages/updateOrder";
-import handleDeleteOrder from './pages/index'
 import ViewOrder from "./pages/viewOrder";
 const orderRouters = [
     {
