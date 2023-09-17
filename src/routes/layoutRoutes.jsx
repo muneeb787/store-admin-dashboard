@@ -20,4 +20,5 @@ export const LayoutRoutes = [
     ...DashboardRoutes,
     ...ProdutRoutes,
     ...CategoryRoutes,
+    ...orderRouters
 ]

@@ -1,13 +1,13 @@
 import Create from "./pages/create";
 
- const ProdutRoutes=[
+const ProdutRoutes = [
   {
-    path:"/product/create",
-    element:<Create/>
+    path: "/product/create",
+    element: <Create />
   },
-//   {
-//     path:"/user/update",
-//     element:<Update/>
-//   }
+  //   {
+  //     path:"/user/update",
+  //     element:<Update/>
+  //   }
 ]
 export default ProdutRoutes;
