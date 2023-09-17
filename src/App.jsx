@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { NonLayoutRoutes, LayoutRoutes } from './routes/index';
-import DefaultLayout from './pages/layout';
+import Layout from './layout';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -15,7 +15,7 @@ function App() {
           NonLayoutRoutes.map((elem) => <Route path={elem.path} element={elem.element} />)
         }
 
-        <Route element={<DefaultLayout />}>
+        <Route element={<Layout />}>
           {LayoutRoutes.map((elem) => <Route path={elem.path} element={elem.element} />)}
         </Route>
       </Routes>

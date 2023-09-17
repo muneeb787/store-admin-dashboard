@@ -4,6 +4,8 @@ import { DashboardRoutes } from "../modules/dashboard/router.jsx"
 import OrderIndex from "../modules/orders/pages/index.jsx"
 import orderRouters from "../modules/orders/router.jsx"
 import Profile from "../pages-copy/Profile.jsx"
+import ProdutRoutes from "../modules/products/router.jsx"
+import CategoryRoutes from "../modules/category/router.jsx"
 export const LayoutRoutes = [
     {
         title: "demo",
@@ -16,5 +18,6 @@ export const LayoutRoutes = [
         element: <Dashboard />
     },
     ...DashboardRoutes,
-    ...orderRouters
+    ...ProdutRoutes,
+    ...CategoryRoutes,
 ]
