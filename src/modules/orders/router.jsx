@@ -9,12 +9,12 @@ const orderRouters = [
     },
     {
         title: "Update Order",
-        path: "order/update",
+        path: "order/update/:id",
         element: < UpdateOrder/>
     }, 
     {
         title: "View Order",
-        path: "order/view",
+        path: "order/view/:id",
         element: < ViewOrder/>
     }
 ]
