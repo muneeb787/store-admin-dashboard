@@ -4,7 +4,7 @@ import ViewOrder from "./pages/viewOrder";
 const orderRouters = [
     {
         title: "All Orders",
-        path: "order/index",
+        path: "order/getAll",
         element: < OrderIndex/>
     },
     {
@@ -14,7 +14,7 @@ const orderRouters = [
     }, 
     {
         title: "View Order",
-        path: "order/view",
+        path: "order/getSingle",
         element: < ViewOrder/>
     }
 ]
