@@ -1,5 +1,34 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+
 const UpdateOrder = () => {
+    const [orderData, setOrderData] = useState({
+        productName: '',
+        orderQuantity: '',
+        productPrice: '',
+        totalOrderPrice: '',
+        orderStatus: '',
+        transactionID: ''
+    });
+
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        setOrderData({...orderData, [name]: value});
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.put('http://localhost:3300/order/update/:id', orderData);
+            console.log('Order updated successfully:', response.data);
+        }
+        catch(error) {
+            console.error('Error updating order:', error);
+        }
+    };
   return (
+
     <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
       <div className="flex flex-col gap-9">
         {/* <!-- Order Update Form --> */}
