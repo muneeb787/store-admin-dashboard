@@ -1,50 +1,50 @@
-import axios, { HttpStatusCode } from "axios";
-import { Navigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import axios, { HttpStatusCode } from 'axios';
+import { Navigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const createAxiosInstance = (token) => {
-    const http = axios.create({
-        baseURL: "http://localhost:3303",
-        // headers: { Authorization: "Bearer " + token },
-    });
+  const http = axios.create({
+    baseURL: 'http://localhost:3301',
+    // headers: { Authorization: "Bearer " + token },
+  });
 
-    http.interceptors.request.use(
-        (config) => {
-            config.headers.Authorization = "Bearer " + localStorage.getItem("token");
-            return config;
-        },
-        (error) => {
-            Promise.reject(error);
-        }
-    );
+  http.interceptors.request.use(
+    (config) => {
+      config.headers.Authorization = 'Bearer ' + localStorage.getItem('token');
+      return config;
+    },
+    (error) => {
+      Promise.reject(error);
+    },
+  );
 
-    http.interceptors.response.use(
-        (response) => response,
-        (error) => {
-            const { data , status } = error.response;
-            console.log(status, "error.responseerror.responseerror.response");
+  http.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      const { data, status } = error.response;
+      console.log(status, 'error.responseerror.responseerror.response');
 
-            if (status === 401) {
-                console.log("Unautherized");
-                localStorage.setItem("token", "");
-                Navigate("login");
-            }
+      if (status === 401) {
+        console.log('Unautherized');
+        localStorage.setItem('token', '');
+        Navigate('login');
+      }
 
-            if (status == 500) {
-                toast.error(data.message);
-            }
+      if (status == 500) {
+        toast.error(data.message);
+      }
 
-            return Promise.reject(error);
-        }
-    );
+      return Promise.reject(error);
+    },
+  );
 
-    return http;
+  return http;
 };
 
 const useAxios = () => {
-    const token = localStorage.getItem("token");
-    console.log(token, "tokentokentokentoken");
-    return createAxiosInstance(token);
+  const token = localStorage.getItem('token');
+  console.log(token, 'tokentokentokentoken');
+  return createAxiosInstance(token);
 };
 
 export default useAxios;
