@@ -1,4 +1,5 @@
-import Category from "./pages/create";
+import Category from "./pages/create.jsx";
+import CategoryList from "./pages/index.jsx";
 
  const CategoryRoutes=[
   {
@@ -6,5 +7,11 @@ import Category from "./pages/create";
     path:"/category/create",
     element:<Category/>
   },
+  {
+    title:"Index",
+    path:"/category/index",
+    element:<CategoryList/>
+
+  }
 ]
 export default CategoryRoutes;
