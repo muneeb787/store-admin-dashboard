@@ -1,36 +1,59 @@
 import { Field, FormikProvider, useFormik } from "formik";
 import useAxios from "../../../hooks/axios";
 import { toast } from "react-toastify";
-// import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useEffect } from "react";
 
 import * as Yup from "Yup";
 
 
 const Create = () => {
 
-  const axiosInstance=useAxios()
+  const axiosInstance=useAxios();
+  const [data, setData] = useState([]);
+
+    useEffect(() => {
+      axiosInstance.get("/category")
+        .then((res) => {
+          toast.success(res.data.message);
+          setData(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }, []);
+  
 const schema=Yup.object({
-    product_name:Yup.string().min(3).max(30).required("Required"),
+    name:Yup.string().min(3).max(30).required("Required"),
     price:Yup.number().min(0).max(100000).required("Required"),
     description:Yup.string().min(3).max(200).required("Required"),
 })
 
 const formik=useFormik({
     initialValues:{
-        product_name:"",
+        name:"",
         price:"",
         description:"",
     },
     validationSchema:schema,
-    // onSubmit: (values, { setSubmitting, resetForm }) => {
-    //   axiosInstance
-    //     .post("", values) // Replace '/api/your-endpoint' with your API endpoint
-    //     .then((res) => toast.success(res.data.message))
-    //     .catch((err) => console.log(err));
-    //     // toast.success("User Created Successfully");
-    // },
-  
-    onSubmit:(values)=>console.log(values),
+    onSubmit: (values, { setSubmitting, resetForm }) => {
+      axiosInstance
+      .post('/product', values)
+      .then((response) => {
+        console.log('Form submitted successfully:', response.data);
+        
+        resetForm();
+        toast.success("Product Created successfully") 
+      })
+      .catch((error) => {
+        console.error('Error submitting form:', error);
+        
+      })
+      .finally(() => {
+        setSubmitting(false); 
+      });
+    },
 });
   return (
     <>
@@ -51,11 +74,11 @@ const formik=useFormik({
                     Name
                   </label>
                   <Field
-                    name="product_name"
+                    name="name"
                     placeholder="Enter Product Name"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   />
-                  {formik.touched.product_name && formik.errors.product_name && <h3>{formik.errors.product_name}</h3> }
+                  {formik.touched.name && formik.errors.name && <h3>{formik.errors.name}</h3> }
                 </div>
 
                 <div className="mb-4.5">
@@ -126,9 +149,9 @@ const formik=useFormik({
                     </svg>
                   </span>
                   <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-                    <option value="">USA</option>
-                    <option value="">UK</option>
-                    <option value="">Canada</option>
+                  {data.map((ele) => (
+                    <option value="">{ele.name}</option>
+                  ))}
                   </select>
                   <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                     <svg
