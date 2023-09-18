@@ -18,33 +18,33 @@ const createAxiosInstance = (token) => {
     },
   );
 
-  http.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      const { data, status } = error.response;
-      console.log(status, 'error.responseerror.responseerror.response');
+    http.interceptors.response.use(
+        (response) => response,
+        (error) => {
+            const { status } = error.response;
+            console.log(status, "error.responseerror.responseerror.response");
 
-      if (status === 401) {
-        console.log('Unautherized');
-        localStorage.setItem('token', '');
-        Navigate('login');
-      }
+            if (status === 401) {
+                console.log("Unautherized");
+                localStorage.setItem("token", "");
+                Navigate("login");
+            }
 
-      if (status == 500) {
-        toast.error(data.message);
-      }
+            if (status == 500) {
+                toast.error(data.message);
+            }
 
-      return Promise.reject(error);
-    },
-  );
+            return Promise.reject(error);
+        }
+    );
 
   return http;
 };
 
 const useAxios = () => {
-  const token = localStorage.getItem('token');
-  console.log(token, 'tokentokentokentoken');
-  return createAxiosInstance(token);
+    const token = localStorage.getItem("token");
+    console.log(token, "tokentokentokentoken");
+    return createAxiosInstance(token);
 };
 
 export default useAxios;

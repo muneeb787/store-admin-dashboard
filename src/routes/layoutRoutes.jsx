@@ -14,6 +14,10 @@ export const LayoutRoutes = [
     path: '/',
     element: <Dashboard />,
   },
-  ...DashboardRoutes,
-  ...UserRoutes,
-];
+    ...DashboardRoutes,
+    ...ProdutRoutes,
+  ...CategoryRoutes,
+    ...UserRoutes
+]
+
+

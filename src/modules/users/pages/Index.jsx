@@ -85,19 +85,16 @@ const ViewIndex = () => {
                     <tr>
                       <td className="border-b border-[#eee] py-5 dark:border-strokedark xl:pl-11">
                         <h5 className="font-medium text-black dark:text-white">
-                          {index + 1}
+                          {index+1}
                         </h5>
                         {/* <p className="text-sm">$0.00</p> */}
                       </td>
+
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                        <p className="text-black dark:text-white">
-                          {user.name}
-                        </p>
+                        <p className="text-black dark:text-white">{user.name}</p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                        <p className="text-black dark:text-white">
-                          {user.email}
-                        </p>
+                        <p className="text-black dark:text-white">{user.email}</p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <p className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
@@ -114,8 +111,8 @@ const ViewIndex = () => {
                               className="fill-current"
                               width="18"
                               height="18"
-                              // viewBox="0 0 18 18"
-                              // fill="none"
+                              viewBox="0 0 18 18"
+                              fill="none"
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
@@ -137,8 +134,8 @@ const ViewIndex = () => {
                               className="fill-current"
                               width="18"
                               height="18"
-                              // viewBox="0 0 18 18"
-                              // fill="none"
+                              viewBox="0 0 18 18"
+                              fill="none"
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
@@ -169,8 +166,8 @@ const ViewIndex = () => {
                               className="fill-current"
                               width="18"
                               height="18"
-                              // viewBox="0 0 18 18"
-                              // fill="none"
+                              viewBox="0 0 18 18"
+                              fill="none"
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
