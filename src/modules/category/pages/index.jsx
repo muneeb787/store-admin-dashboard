@@ -11,20 +11,7 @@ const CategoryList = () => {
 const [data, setData] = useState([]);
   const navigate = useNavigate();
 
-    const deleteUser = (idToDelete) => {
-        axiosInstance.get(`/category/${idToDelete}`)
-        .then((res) => {
-          console.log("world")
-          toast.success("Category Deleted succussfully");
-          setData(res.data);
-        })
-        .catch((err) => {
-          console.log(err); 
-          toast.error("An error occurred");
-        });
-    };
-
-  useEffect(() => {
+  const fetchData = () => {
     axiosInstance.get("/category")
       .then((res) => {
         toast.success(res.data.message);
@@ -33,6 +20,22 @@ const [data, setData] = useState([]);
       .catch((err) => {
         console.log(err);
       });
+  }
+
+    const deleteUser = (idToDelete) => {
+      console.log(idToDelete, "deleteUser");
+        axiosInstance.delete(`/category/${idToDelete}`)
+        .then((res) => {
+          toast.success("Category Deleted succussfully");
+          fetchData()
+        })
+        .catch((err) => { 
+          toast.error("An error occurred");
+        });
+    };
+
+  useEffect(() => {
+    fetchData()
   }, []);
 
 
@@ -53,14 +56,14 @@ const [data, setData] = useState([]);
             
             <tbody>
             {data.map((ele) => (
-              <tr key={ele._id}>
               
+              <tr key={ele._id}>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
                     {ele.name}
                   </h5>
                 </td>
-              
+                <h1>{ele._id}</h1>
 
               
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
