@@ -10,19 +10,31 @@ const Category = () => {
 
   const axiosInstance=useAxios();
 const schema=Yup.object({
-    category_name:Yup.string().min(3).max(30).required("Required"),
+    name:Yup.string().min(3).max(30).required("Required"),
 })
 
 const formik=useFormik({
     initialValues:{
-        category_name:"",
+        name:"",
     },
     validationSchema:schema,
-    onSubmit: (values) => {
+    onSubmit: (values, { setSubmitting, resetForm }) => {
       axiosInstance
-        .post('/category', values) // Replace '/api/your-endpoint' with your API endpoint
-        .then((res) => toast.success(res.message))
-        .catch((err) => console.log(err));
+      .post('/category', values) // Replace '/api/your-endpoint' with your API endpoint
+      .then((response) => {
+        console.log('Form submitted successfully:', response.data);
+        
+        // You can handle success actions here
+        resetForm();
+        toast.success("Category Created successfully") 
+      })
+      .catch((error) => {
+        console.error('Error submitting form:', error);
+        // You can handle error actions here
+      })
+      .finally(() => {
+        setSubmitting(false); // Set form to not submitting
+      });
     },
   
     // onSubmit:(values)=>console.log(values),
@@ -46,11 +58,11 @@ const formik=useFormik({
                     Name
                   </label>
                   <Field
-                    name="category_name"
+                    name="name"
                     placeholder="Enter Category"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   />
-                  {formik.touched.category_name && formik.errors.category_name && <h3>{formik.errors.category_name}</h3> }
+                  {formik.touched.name && formik.errors.name && <h3>{formik.errors.name}</h3> }
                 </div>
 
                 <button type="submit"   className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
