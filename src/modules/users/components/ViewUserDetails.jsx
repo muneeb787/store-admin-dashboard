@@ -9,7 +9,7 @@ const ViewUserDetails = () => {
         axiosInstance
           .get('/users')
           .then((res) => {
-            console.log(res.data.users);
+            console.log(res.data);
             setUsers(res.data.users);
             console.log(users, 'Users loaded');
           })

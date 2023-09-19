@@ -85,16 +85,20 @@ const ViewIndex = () => {
                     <tr>
                       <td className="border-b border-[#eee] py-5 dark:border-strokedark xl:pl-11">
                         <h5 className="font-medium text-black dark:text-white">
-                          {index+1}
+                          {index + 1}
                         </h5>
                         {/* <p className="text-sm">$0.00</p> */}
                       </td>
 
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                        <p className="text-black dark:text-white">{user.name}</p>
+                        <p className="text-black dark:text-white">
+                          {user.name}
+                        </p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                        <p className="text-black dark:text-white">{user.email}</p>
+                        <p className="text-black dark:text-white">
+                          {user.email}
+                        </p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <p className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
@@ -158,9 +162,7 @@ const ViewIndex = () => {
                           </button>
                           <button
                             className="hover:text-primary"
-                            onClick={(e) => {
-                              navigate(`/user/${user._id}`);
-                            }}
+                            onClick={updateHandleClick}
                           >
                             <svg
                               className="fill-current"
@@ -180,6 +182,7 @@ const ViewIndex = () => {
                               />
                             </svg>
                           </button>
+                          {showUser && <Update />}
                         </div>
                       </td>
                     </tr>
