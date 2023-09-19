@@ -1,31 +1,49 @@
-import { FormikProvider, useFormik, Field } from 'formik';
-import React, { useEffect, useState } from 'react';
-import * as yup from 'Yup';
+import { Field, FormikProvider, useFormik } from 'formik';
 import useAxios from '../../../hooks/axios';
+import { toast } from 'react-toastify';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
-const getUser = yup.object({
-  name: yup.string().required('Required').min(3).max(30),
-  email: yup
-    .string()
-    .email('This must be an Email')
-    .required('Email is required'),
-  password: yup
-    .string()
-    .required('Password is required')
-    .min(8, 'Password Must be at least 8 characters'),
-  role: yup.string().required('Required').min(4),
-  house: yup.string().required('Required').min(3).max(30),
-  street: yup.string().required('Required').min(3).max(30),
-  city: yup.string().required('Required').min(3).max(30),
-  country: yup.string().required('Required').min(3).max(30),
-  postal_code: yup.string().required('Required').min(3).max(30),
-  number: yup.string().required('Required').min(11).max(13),
-});
+import * as yup from 'Yup';
 
 const Update = () => {
+  const { id } = useParams();
+  console.log(id);
+  const [userData, setUserData] = useState({});
+  const navigate = useNavigate();
+  console.log(userData);
   const axiosInstance = useAxios();
-  const [users, setUsers] = useState([]);
-  useEffect(() => {}, []);
+  useEffect(() => {
+    axiosInstance
+      .get(`/user/${id}`)
+      .then((res) => {
+        productsetData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  
+  const schema = yup.object({
+    name: yup.string().required('Required').min(3).max(30),
+    email: yup
+      .string()
+      .email('This must be an Email')
+      .required('Email is required'),
+    password: yup
+      .string()
+      .required('Password is required')
+      .min(8, 'Password Must be at least 8 characters'),
+    role: yup.string().required('Required').min(4),
+    house: yup.string().required('Required').min(3).max(30),
+    street: yup.string().required('Required').min(3).max(30),
+    city: yup.string().required('Required').min(3).max(30),
+    country: yup.string().required('Required').min(3).max(30),
+    postal_code: yup.string().required('Required').min(3).max(30),
+    number: yup.string().required('Required').min(11).max(13),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -39,285 +57,175 @@ const Update = () => {
       country: '',
       postal_code: '',
     },
-    validationSchema: getUser,
-    onSubmit: (values) => {
+    validationSchema: schema,
+    onSubmit: (values, { setSubmitting, resetForm }) => {
+      console.log('Bookh Lgi Hai ;(');
       axiosInstance
-        .put('/user/:id', values)
-        .then((res) => {
-          console.log(res.data.users);
-          setUsers(res.data.users);
-          console.log(users, 'User loaded');
+        .put(`/user/${id}`, values)
+        .then((response) => {
+          console.log('Form submitted successfully:', response.data);
+
+          resetForm();
+          toast.success('User Updated successfully');
+          navigate(-1);
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((error) => {
+          console.error('Error submitting form:', error);
+        })
+        .finally(() => {
+          setSubmitting(false);
         });
     },
   });
 
   return (
-    <div className="">
-      <div className="w-full border-2 p-6 m-auto bg-white rounded-md shadow-md ring-2 ">
-        <h2 className="mt-6 text-center text-2xl font-bold leading-9 text-gray-900">
-          Update User
-        </h2>
-        <FormikProvider value={formik}>
-          <form className="">
-            <div className="flex p-6">
-              {/* //UserName */}
-              <div className="flex-none p-6 mx-6">
-                <label
-                  htmlFor="name"
-                  className="block text-lg font-medium leading-6 text-gray-900"
-                >
+    <>
+      <FormikProvider value={formik}>
+        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+          <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
+            <h3 className="font-medium text-black dark:text-white">
+              Update User
+            </h3>
+          </div>
+          <form onSubmit={formik.handleSubmit}>
+            <div className="p-6.5">
+              {/* Name */}
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
                   Name
                 </label>
-                <div className="mt-2">
-                  <Field
-                    id="name"
-                    name="name"
-                    type="text"
-                    autoComplete="name"
-                    required
-                    placeholder=" Ali"
-                    className="w-full border-2 input input-bordered"
-                  />
-                  {formik.touched.name && formik.errors.name && (
-                    <h6 style={{ color: 'red' }}>{formik.errors.name}</h6>
-                  )}
-                </div>
+                <Field
+                  name="name"
+                  placeholder={userData.name}
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                />
+                {formik.touched.name && formik.errors.name && (
+                  <h3>{formik.errors.name}</h3>
+                )}
               </div>
-              {/* //UserEmail */}
-              <div className="flex-none p-6 mx-6">
-                <label
-                  htmlFor="email"
-                  className="block text-lg font-medium leading-6 text-gray-900"
-                >
-                  Email address
+              {/* email */}
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
+                  Email
                 </label>
-                <div className="mt-2">
-                  <Field
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    placeholder=" Ali@gmail.com"
-                    className="w-full border-2 input input-bordered"
-                  />
-                  {formik.touched.email && formik.errors.email && (
-                    <h6 style={{ color: 'red' }}>{formik.errors.email}</h6>
-                  )}
-                </div>
+                <Field
+                  name="email"
+                  placeholder={userData.email}
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                />
+                {formik.touched.email && formik.errors.email && (
+                  <h3>{formik.errors.email}</h3>
+                )}
               </div>
-            </div>
-            <div className="flex p-6">
-              {/* //UserPassword */}
-              <div className="flex-none p-6 mx-6">
-                <label
-                  htmlFor="password"
-                  className="block text-lg font-medium leading-6 text-gray-900"
-                >
+              {/* password */}
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
                   Password
                 </label>
-                <div className="mt-2">
-                  <Field
-                    id="password"
-                    name="password"
-                    type="text"
-                    autoComplete="password"
-                    required
-                    placeholder=" Password"
-                    className="w-full border-2 input input-bordered"
-                  />
-                  {formik.touched.password && formik.errors.password && (
-                    <h6 style={{ color: 'red' }}>{formik.errors.password}</h6>
-                  )}
-                </div>
+                <Field
+                  name="password"
+                  placeholder={userData.password}
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                />
+                {formik.touched.password && formik.errors.password && (
+                  <h3>{formik.errors.password}</h3>
+                )}
               </div>
-              {/* //UserRole */}
-              <div className="flex-none p-6 mx-6">
-                <label
-                  htmlFor="role"
-                  className="block text-lg font-medium leading-6 text-gray-900"
-                >
+              {/*  role */}
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
                   Role
                 </label>
-                <div className="mt-2">
-                  <Field
-                    id="role"
-                    name="role"
-                    type="text"
-                    autoComplete="role"
-                    required
-                    placeholder=" User"
-                    className="w-full border-2 input input-bordered"
-                  />
-                  {formik.touched.role && formik.errors.role && (
-                    <h6 style={{ color: 'red' }}>{formik.errors.role}</h6>
-                  )}
-                </div>
+                <Field
+                  name=" role"
+                  placeholder={userData.role}
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                />
+                {formik.touched.role && formik.errors.role && (
+                  <h3>{formik.errors.role}</h3>
+                )}
               </div>
-            </div>
-            {/* //Address Heading */}
-            <div className="flex p-6">
-              {/* //UserHouse */}
-              <div className="flex-none p-6 mx-6">
-                <label
-                  htmlFor="house"
-                  className="block text-lg font-medium leading-6 text-gray-900"
-                >
-                  House No.
+              {/* house */}
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
+                  House
                 </label>
-                <div className="mt-2">
-                  <Field
-                    id="house"
-                    name="house"
-                    type="text"
-                    autoComplete="house"
-                    required
-                    placeholder=" H#666 E"
-                    className="w-full border-2 input input-bordered"
-                  />
-                  {formik.touched.house && formik.errors.house && (
-                    <h6 style={{ color: 'red' }}>{formik.errors.house}</h6>
-                  )}
-                </div>
+                <Field
+                  name="house"
+                  placeholder={userData.house}
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                />
+                {formik.touched.house && formik.errors.house && (
+                  <h3>{formik.errors.house}</h3>
+                )}
               </div>
-              {/* //UserStreet */}
-              <div className="flex-none p-6 mx-6">
-                <label
-                  htmlFor="street"
-                  className="block text-lg font-medium leading-6 text-gray-900"
-                >
+              {/*    street */}
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
                   Street
                 </label>
-                <div className="mt-2">
-                  <Field
-                    id="street"
-                    name="street"
-                    type="text"
-                    autoComplete="street"
-                    required
-                    placeholder=" Street"
-                    className="w-full border-2 input input-bordered"
-                  />
-                  {formik.touched.street && formik.errors.street && (
-                    <h6 style={{ color: 'red' }}>{formik.errors.street}</h6>
-                  )}
-                </div>
+                <Field
+                  name="   street"
+                  placeholder={userData.street}
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                />
+                {formik.touched.street && formik.errors.street && (
+                  <h3>{formik.errors.street}</h3>
+                )}
               </div>
-            </div>
-            <div className="flex p-6 ">
-              {/* //UserCity */}
-              <div className="flex-none p-6 mx-6">
-                <label
-                  htmlFor="city"
-                  className="block text-lg font-medium leading-6 text-gray-900"
-                >
+              {/* city */}
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
                   City
                 </label>
-                <div className="mt-2">
-                  <Field
-                    id="city"
-                    name="city"
-                    type="text"
-                    autoComplete="city"
-                    required
-                    placeholder=" City"
-                    className="w-full border-2 input input-bordered"
-                  />
-                  {formik.touched.city && formik.errors.city && (
-                    <h6 style={{ color: 'red' }}>{formik.errors.city}</h6>
-                  )}
-                </div>
+                <Field
+                  name="city"
+                  placeholder={userData.city}
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                />
+                {formik.touched.city && formik.errors.city && (
+                  <h3>{formik.errors.city}</h3>
+                )}
               </div>
-              {/* //UserCountry */}
-              <div className="flex-none p-6 mx-6">
-                <label
-                  htmlFor="country"
-                  className="block text-lg font-medium leading-6 text-gray-900"
-                >
+              {/* country */}
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
                   Country
                 </label>
-                <div className="mt-2">
-                  <Field
-                    id="country"
-                    name="country"
-                    type="text"
-                    autoComplete="country"
-                    required
-                    placeholder=" Country"
-                    className="w-full border-2 input input-bordered"
-                  />
-                  {formik.touched.country && formik.errors.country && (
-                    <h6 style={{ color: 'red' }}>{formik.errors.country}</h6>
-                  )}
-                </div>
+                <Field
+                  name="country"
+                  placeholder={userData.country}
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                />
+                {formik.touched.country && formik.errors.country && (
+                  <h3>{formik.errors.country}</h3>
+                )}
               </div>
-            </div>
-            <div className="flex p-6">
-              {/* //UserPostal_Code */}
-              <div className="flex-none p-6 mx-6">
-                <label
-                  htmlFor="postal_code"
-                  className="block text-lg font-medium leading-6 text-gray-900"
-                >
-                  Postal Code
+              {/* postal_code */}
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
+                  Postal_code
                 </label>
-                <div className="mt-2">
-                  <Field
-                    id="postal_code"
-                    name="postal_code"
-                    type="text"
-                    autoComplete="postal_code"
-                    required
-                    placeholder=" Postal_code"
-                    className="w-full border-2 input input-bordered"
-                  />
-                  {formik.touched.postal_code && formik.errors.postal_code && (
-                    <h6 style={{ color: 'red' }}>
-                      {formik.errors.postal_code}
-                    </h6>
-                  )}
-                </div>
+                <Field
+                  name="postal_code"
+                  placeholder={userData.postal_code}
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                />
+                {formik.touched.postal_code && formik.errors.postal_code && (
+                  <h3>{formik.errors.postal_code}</h3>
+                )}
               </div>
-              {/* //UserNumber */}
-              <div className="flex-none p-6 mx-6">
-                <label
-                  htmlFor="number"
-                  className="block text-lg font-medium leading-6 text-gray-900"
-                >
-                  Number
-                </label>
-                <div className="mt-2">
-                  <Field
-                    id="number"
-                    name="number"
-                    type="text"
-                    autoComplete="number"
-                    required
-                    placeholder="03355566666"
-                    className="w-full border-2 input input-bordered"
-                  />
-                  {formik.touched.number && formik.errors.number && (
-                    <h6 style={{ color: 'red' }}>{formik.errors.number}</h6>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div>
               <button
                 type="submit"
-                className="text-lg p-6 mx-12 border-2"
-                onClick={formik.handleSubmit}
+                className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
               >
                 Update
               </button>
             </div>
           </form>
-        </FormikProvider>
-      </div>
-    </div>
+        </div>
+      </FormikProvider>
+    </>
   );
 };
 
