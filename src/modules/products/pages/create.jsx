@@ -24,10 +24,13 @@ const Create = () => {
         });
     }, []);
   
+    // const [submittedValues, setSubmittedValues] = useState(null);
+
 const schema=Yup.object({
     name:Yup.string().min(3).max(30).required("Required"),
     price:Yup.number().min(0).max(100000).required("Required"),
     description:Yup.string().min(3).max(200).required("Required"),
+    category_id: Yup.string().required("Please select an option")
 })
 
 const formik=useFormik({
@@ -35,9 +38,12 @@ const formik=useFormik({
         name:"",
         price:"",
         description:"",
+        category_id:""
     },
     validationSchema:schema,
     onSubmit: (values, { setSubmitting, resetForm }) => {
+      // setSubmittedValues(values)
+      // console.log(submittedValues);
       axiosInstance
       .post('/product', values)
       .then((response) => {
@@ -54,6 +60,7 @@ const formik=useFormik({
         setSubmitting(false); 
       });
     },
+    
 });
   return (
     <>
@@ -148,11 +155,31 @@ const formik=useFormik({
                       </g>
                     </svg>
                   </span>
-                  <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+
+                  
+          <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+            id="category_id"
+            name="category_id"
+            // onChange={formik.handleChange}
+            // onBlur={formik.handleBlur}
+            value={formik.values.category_id}
+          >
+            {data.map((option) => (
+              <option  value={option.name}>
+                {option.name}
+              </option>
+            ))}
+          </select>
+          {formik.touched.category_id && formik.errors.category_id && (
+            <h3>{formik.errors.category_id}</h3>
+          )}
+        
+                  {/* <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+                  
                   {data.map((ele) => (
                     <option value="">{ele.name}</option>
                   ))}
-                  </select>
+                  </select> */}
                   <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                     <svg
                       width="24"
