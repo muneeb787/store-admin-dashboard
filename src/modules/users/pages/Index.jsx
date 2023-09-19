@@ -1,71 +1,104 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAxios from '../../../hooks/axios';
-import Loader from "../../../components/lodaer"
+import Loader from '../../../components/lodaer';
+import ViewUserDetails from '../components/ViewUserDetails';
+import Update from '../../users/pages/Update';
 
 const ViewIndex = () => {
   const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
   const [loader, setLoader] = useState(true);
+  const [showUser, setShowUser] = useState(false);
+  const [updateUser, setUpdateUser] = useState(false);
+
+  const showHandleClick = () => setShowUser(!showUser);
+  const updateHandleClick = () => setUpdateUser(!updateUser);
+
+  const axiosInstance = useAxios();
+
 
   useEffect(() => {
-    const axiosInstance = useAxios();
+
     axiosInstance
       .get('/users')
       .then((res) => {
         console.log(res.data.users);
         setUsers(res.data.users);
-        console.log(users, "Users loaded");
+        console.log(users, 'Users loaded');
       })
       .catch((err) => {
         console.log(err);
-      }).finally(() => {
+      })
+      .finally(() => {
         setLoader(false);
       });
   }, []);
 
+  const deleteUser = (id) => {
+    axiosInstance
+      .delete('/user/:id')
+      .then((res) => {
+        console.log(res.data.users);
+        setUsers(res.data.users);
+        console.log(users, 'User Deleted');
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoader(false);
+      });
+  };
+
   return (
     <>
-      {loader ? <Loader /> : (<div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div className="max-w-full overflow-x-auto">
-          <table className="w-full table-auto">
-            <thead>
-              <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                  Sr#
-                </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Name
-                </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Email
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  Role
-                </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                users.map((user, index) => {
+      {loader ? (
+        <Loader />
+      ) : (
+        <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+          <div className="max-w-full overflow-x-auto">
+            <table className="w-full table-auto">
+              <thead>
+                <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                  <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                    Sr#
+                  </th>
+                  <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                    Name
+                  </th>
+                  <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                    Email
+                  </th>
+                  <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+                    Role
+                  </th>
+                  <th className="py-4 px-4 font-medium text-black dark:text-white">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user, index) => {
                   return (
                     <tr>
                       <td className="border-b border-[#eee] py-5 dark:border-strokedark xl:pl-11">
                         <h5 className="font-medium text-black dark:text-white">
-                          {index+1}
+                          {index + 1}
                         </h5>
                         {/* <p className="text-sm">$0.00</p> */}
                       </td>
 
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                        <p className="text-black dark:text-white">{user.name}</p>
+                        <p className="text-black dark:text-white">
+                          {user.name}
+                        </p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                        <p className="text-black dark:text-white">{user.email}</p>
+                        <p className="text-black dark:text-white">
+                          {user.email}
+                        </p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <p className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
@@ -74,7 +107,10 @@ const ViewIndex = () => {
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <div className="flex items-center space-x-3.5">
-                          <button className="hover:text-primary">
+                          <button
+                            className="hover:text-primary"
+                            onClick={showHandleClick}
+                          >
                             <svg
                               className="fill-current"
                               width="18"
@@ -93,7 +129,11 @@ const ViewIndex = () => {
                               />
                             </svg>
                           </button>
-                          <button className="hover:text-primary">
+                          {showUser && <ViewUserDetails />}
+                          <button
+                            className="hover:text-primary"
+                            onClick={deleteUser(users._id)}
+                          >
                             <svg
                               className="fill-current"
                               width="18"
@@ -120,7 +160,10 @@ const ViewIndex = () => {
                               />
                             </svg>
                           </button>
-                          <button className="hover:text-primary">
+                          <button
+                            className="hover:text-primary"
+                            onClick={updateHandleClick}
+                          >
                             <svg
                               className="fill-current"
                               width="18"
@@ -139,15 +182,17 @@ const ViewIndex = () => {
                               />
                             </svg>
                           </button>
+                          {showUser && <Update />}
                         </div>
                       </td>
                     </tr>
                   );
                 })}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>)}
+      )}
     </>
   );
 };

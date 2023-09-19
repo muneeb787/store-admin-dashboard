@@ -1,24 +1,22 @@
-import { Field, FormikProvider, useFormik } from "formik";
-import useAxios from "../../../hooks/axios";
-import { toast } from "react-toastify";
-import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
-import { useEffect } from "react";
+import { Field, FormikProvider, useFormik } from 'formik';
+import useAxios from '../../../hooks/axios';
+import { toast } from 'react-toastify';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
-import * as Yup from "Yup";
-
+import * as Yup from 'Yup';
 
 const ProductUpdate = () => {
-
   const { id } = useParams();
   console.log(id);
   const [productdata, productsetData] = useState({});
   const navigate = useNavigate();
   console.log(productdata);
   useEffect(() => {
-    axiosInstance.get(`/product/${id}`)
+    axiosInstance
+      .get(`/product/${id}`)
       .then((res) => {
-
         productsetData(res.data);
       })
       .catch((err) => {
@@ -26,12 +24,11 @@ const ProductUpdate = () => {
       });
   }, []);
 
-
-
   const axiosInstance = useAxios();
   const [data, setData] = useState([]);
   useEffect(() => {
-    axiosInstance.get("/category")
+    axiosInstance
+      .get('/category')
       .then((res) => {
         toast.success(res.data.message);
         setData(res.data);
@@ -41,53 +38,41 @@ const ProductUpdate = () => {
       });
   }, []);
 
-
   const schema = Yup.object({
-    name: Yup.string().min(3).max(30).required("Required"),
-    price: Yup.number().min(0).max(100000).required("Required"),
-    description: Yup.string().min(3).max(200).required("Required"),
-  })
+    name: Yup.string().min(3).max(30).required('Required'),
+    price: Yup.number().min(0).max(100000).required('Required'),
+    description: Yup.string().min(3).max(200).required('Required'),
+  });
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      price: "",
-      description: "",
+      name: '',
+      price: '',
+      description: '',
     },
     validationSchema: schema,
     onSubmit: (values, { setSubmitting, resetForm }) => {
+      console.log('kesi ho');
       axiosInstance
         .put(`/product/${id}`, values)
         .then((response) => {
           console.log('Form submitted successfully:', response.data);
 
           resetForm();
-          toast.success("Product Updated successfully")
-          navigate(-1)
+          toast.success('Product Updated successfully');
+          navigate(-1);
         })
         .catch((error) => {
           console.error('Error submitting form:', error);
-
         })
         .finally(() => {
           setSubmitting(false);
         });
-
     },
   });
-
-  useEffect(() => {
-    formik.setFieldValue("name" , productdata.name)
-    formik.setFieldValue("price" , productdata.price)
-    formik.setFieldValue("description" , productdata.description)
-  }, [productdata])
-  
-
   return (
     <>
-
       <FormikProvider value={formik}>
-
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
             <h3 className="font-medium text-black dark:text-white">
@@ -96,7 +81,6 @@ const ProductUpdate = () => {
           </div>
           <form onSubmit={formik.handleSubmit}>
             <div className="p-6.5">
-
               <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
                   Name
@@ -106,7 +90,9 @@ const ProductUpdate = () => {
                   placeholder={productdata.name}
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {formik.touched.price && formik.errors.name && <h3>{formik.errors.name}</h3>}
+                {formik.touched.price && formik.errors.name && (
+                  <h3>{formik.errors.name}</h3>
+                )}
               </div>
 
               <div className="mb-4.5">
@@ -119,7 +105,9 @@ const ProductUpdate = () => {
                   placeholder={productdata.price}
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {formik.touched.price && formik.errors.price && <h3>{formik.errors.price}</h3>}
+                {formik.touched.price && formik.errors.price && (
+                  <h3>{formik.errors.price}</h3>
+                )}
               </div>
 
               <div className="mb-4.5">
@@ -131,9 +119,10 @@ const ProductUpdate = () => {
                   placeholder={productdata.description}
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {formik.touched.description && formik.errors.description && <h3>{formik.errors.description}</h3>}
+                {formik.touched.description && formik.errors.description && (
+                  <h3>{formik.errors.description}</h3>
+                )}
               </div>
-
 
               <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                 <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
@@ -202,15 +191,10 @@ const ProductUpdate = () => {
                       </span>
                     </div>
                   </div>
-
                 </div>
               </div>
 
-
-
-
-
-              <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+              <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark   dark:bg-boxdark">
                 <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                   <h3 className="font-medium text-black dark:text-white">
                     Image upload
@@ -226,11 +210,8 @@ const ProductUpdate = () => {
                       className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
                     />
                   </div>
-
-
                 </div>
               </div>
-
 
               {/* <div className="mb-6">
                   <label className="mb-2.5 block text-black dark:text-white">
@@ -243,13 +224,15 @@ const ProductUpdate = () => {
                   ></textarea>
                 </div> */}
 
-              <button type="submit" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
+              <button
+                type="submit"
+                className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
+              >
                 ADD
               </button>
             </div>
           </form>
         </div>
-
       </FormikProvider>
     </>
   );
