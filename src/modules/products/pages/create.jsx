@@ -36,7 +36,7 @@ const Create = () => {
   const schema = Yup.object({
     name: Yup.string().min(3).max(30).required("Required"),
     price: Yup.number().min(0).max(100000).required("Required"),
-    description: Yup.string().min(3).max(200).required("Required"),
+    description: Yup.string().min(3).max(400).required("Required"),
     catagory_id: Yup.string(),
     // image: Yup.mixed().required("Image is required"),
   })
