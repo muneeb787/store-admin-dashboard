@@ -1,4 +1,4 @@
-import { Field, FormikProvider, useFormik } from 'formik';
+import { Field, FormikProvider, useFormik , getIn } from 'formik';
 import useAxios from '../../../hooks/axios';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,39 +8,28 @@ import { useEffect } from 'react';
 import * as yup from 'Yup';
 
 const Create = () => {
-  const { id } = useParams();
-  console.log(id);
-  const [userData, setUserData] = useState({});
-  const navigate = useNavigate();
-  console.log(userData);
-  const axiosInstance = useAxios();
-  useEffect(() => {
-    axiosInstance
-      .post(`/user`)
-      .then((res) => {
-        setUserData(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
 
-  const schema = yup.object({
+  const navigate = useNavigate();
+  const axiosInstance = useAxios();
+
+  // const addressSchema = yup.object({
+  //   country: yup.string().required('Required').min(3).max(30),
+  //   city: yup.string().required('Required').min(3).max(30),
+  //   house: yup.string().required('Required').min(3).max(30),
+  //   postal_code: yup.string().required('Required').min(3).max(30),
+  // });
+
+  const schema = yup.object().shape({
     name: yup.string().required('Required').min(3).max(30),
-    email: yup
-      .string()
-      .email('This must be an Email')
-      .required('Email is required'),
-    password: yup
-      .string()
-      .required('Password is required')
-      .min(8, 'Password Must be at least 8 characters'),
-    role: yup.string().required('Required').min(4),
-    house: yup.string().required('Required').min(3).max(30),
-    street: yup.string().required('Required').min(3).max(30),
-    city: yup.string().required('Required').min(3).max(30),
-    country: yup.string().required('Required').min(3).max(30),
-    postal_code: yup.string().required('Required').min(3).max(30),
+    email: yup.string().email('This must be an Email').required('Email is required'),
+    password: yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
+    role: yup.string().required('Required').min(3),
+    address: yup.object().shape({
+      country: yup.string().required('Required').min(3).max(30),
+      city: yup.string().required('Required').min(3).max(30),
+      house: yup.string().required('Required').min(3).max(30),
+      postal_code: yup.string().required('Required').min(3).max(30),
+    }), // Include the address object within your main schema
     number: yup.string().required('Required').min(11).max(13),
   });
 
@@ -50,21 +39,24 @@ const Create = () => {
       email: '',
       password: '',
       role: '',
-      house: '',
-      street: '',
-      city: '',
-      country: '',
-      postal_code: '',
+      address: { // Provide an empty object for the address field
+        house: '',
+        street: '',
+        city: '',
+        country: '',
+        postal_code: '',
+      },
+      number: ''
     },
     validationSchema: schema,
-    onSubmit: (values, { setSubmitting, resetForm }) => {
-      console.log('Bookh Lgi Hai ;(');
+    onSubmit: (values) => {
+      console.log(values, "valuessssssssssssssssssssss")
       axiosInstance
-        .put(`/user/${id}`, values)
+        .post(`/user`, values)
         .then((response) => {
           console.log('Form submitted successfully:', response.data);
 
-          resetForm();
+          // resetForm();
           toast.success('User Created successfully');
           navigate(-1);
         })
@@ -72,7 +64,7 @@ const Create = () => {
           console.error('Error submitting form:', error);
         })
         .finally(() => {
-          setSubmitting(false);
+          // setSubmitting(false);
         });
     },
   });
@@ -86,7 +78,7 @@ const Create = () => {
               Create User
             </h3>
           </div>
-          <form onSubmit={formik.handleSubmit}>
+          <form>
             <div className="p-6.5">
               {/* Name */}
               <div className="mb-4.5">
@@ -95,7 +87,6 @@ const Create = () => {
                 </label>
                 <Field
                   name="name"
-                  placeholder={userData.name}
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
                 {formik.touched.name && formik.errors.name && (
@@ -109,7 +100,6 @@ const Create = () => {
                 </label>
                 <Field
                   name="email"
-                  placeholder={userData.email}
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
                 {formik.touched.email && formik.errors.email && (
@@ -123,7 +113,6 @@ const Create = () => {
                 </label>
                 <Field
                   name="password"
-                  placeholder={userData.password}
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
                 {formik.touched.password && formik.errors.password && (
@@ -136,8 +125,7 @@ const Create = () => {
                   Role
                 </label>
                 <Field
-                  name=" role"
-                  placeholder={userData.role}
+                  name="role"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
                 {formik.touched.role && formik.errors.role && (
@@ -150,12 +138,11 @@ const Create = () => {
                   House
                 </label>
                 <Field
-                  name="house"
-                  placeholder={userData.house}
+                  name="address.house"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {formik.touched.house && formik.errors.house && (
-                  <h3>{formik.errors.house}</h3>
+                {getIn(formik.touched, "address.house") && getIn(formik.errors, "address.house") && (
+                  <h3>{getIn(formik.errors, "address.house")}</h3>
                 )}
               </div>
               {/*    street */}
@@ -164,12 +151,11 @@ const Create = () => {
                   Street
                 </label>
                 <Field
-                  name="   street"
-                  placeholder={userData.street}
+                  name="address.street"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {formik.touched.street && formik.errors.street && (
-                  <h3>{formik.errors.street}</h3>
+                {getIn(formik.touched, "address.street") && getIn(formik.errors, "address.street") && (
+                  <h3>{getIn(formik.errors, "address.street")}</h3>
                 )}
               </div>
               {/* city */}
@@ -178,12 +164,11 @@ const Create = () => {
                   City
                 </label>
                 <Field
-                  name="city"
-                  placeholder={userData.city}
+                  name="address.city"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {formik.touched.city && formik.errors.city && (
-                  <h3>{formik.errors.city}</h3>
+                {getIn(formik.touched, "address.city") && getIn(formik.errors, "address.city") && (
+                  <h3>{getIn(formik.errors, "address.city")}</h3>
                 )}
               </div>
               {/* country */}
@@ -192,12 +177,11 @@ const Create = () => {
                   Country
                 </label>
                 <Field
-                  name="country"
-                  placeholder={userData.country}
+                  name="address.country"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {formik.touched.country && formik.errors.country && (
-                  <h3>{formik.errors.country}</h3>
+                {getIn(formik.touched, "address.country") && getIn(formik.errors, "address.country") && (
+                  <h3>{getIn(formik.errors, "address.country")}</h3>
                 )}
               </div>
               {/* postal_code */}
@@ -206,12 +190,11 @@ const Create = () => {
                   Postal_code
                 </label>
                 <Field
-                  name="postal_code"
-                  placeholder={userData.postal_code}
+                  name="address.postal_code"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {formik.touched.postal_code && formik.errors.postal_code && (
-                  <h3>{formik.errors.postal_code}</h3>
+                {getIn(formik.touched, "address.postal_code") && getIn(formik.errors, "address.postal_code") && (
+                  <h3>{getIn(formik.errors, "address.postal_code")}</h3>
                 )}
               </div>
               {/* number */}
@@ -221,7 +204,6 @@ const Create = () => {
                 </label>
                 <Field
                   name="number"
-                  placeholder={userData.number}
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
                 {formik.touched.number && formik.errors.number && (
@@ -229,7 +211,8 @@ const Create = () => {
                 )}
               </div>
               <button
-                type="submit"
+                type="button"
+                onClick={formik.handleSubmit}
                 className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
               >
                 Create
