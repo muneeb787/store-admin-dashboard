@@ -132,7 +132,9 @@ const ViewIndex = () => {
                           {showUser && <ViewUserDetails />}
                           <button
                             className="hover:text-primary"
-                            onClick={deleteUser(users._id)}
+                            onClick={() => {
+                              deleteUser(users._id);
+                             } }
                           >
                             <svg
                               className="fill-current"

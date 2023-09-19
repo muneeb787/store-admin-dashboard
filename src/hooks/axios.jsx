@@ -21,7 +21,7 @@ const createAxiosInstance = (token) => {
     http.interceptors.response.use(
         (response) => response,
         (error) => {
-            const { status } = error.response;
+            const { status, data } = error.response;
             console.log(status, "error.responseerror.responseerror.response");
 
             if (status === 401) {
