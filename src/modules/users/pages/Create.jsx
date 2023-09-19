@@ -15,6 +15,9 @@ const Create = () => {
   console.log(userData);
   const axiosInstance = useAxios();
   useEffect(() => {
+    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
+      navigate('/login')
+  }
     axiosInstance
       .post(`/user`)
       .then((res) => {

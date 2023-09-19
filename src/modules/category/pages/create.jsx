@@ -4,9 +4,17 @@ import { toast } from "react-toastify";
 // import { useNavigate, useParams } from "react-router-dom";
 
 import * as Yup from "Yup";
+import { useEffect } from "react";
 
 
 const Category = () => {
+
+  useEffect(() => {
+    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
+      navigate('/login')
+  }
+  }, [])
+  
 
   const axiosInstance=useAxios();
 const schema=Yup.object({

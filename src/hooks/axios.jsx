@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 const createAxiosInstance = (token) => {
   const http = axios.create({
-    baseURL: 'http://localhost:3301',
+    baseURL: 'http://localhost:3303',
     // headers: { Authorization: "Bearer " + token },
   });
 
@@ -21,7 +21,7 @@ const createAxiosInstance = (token) => {
     http.interceptors.response.use(
         (response) => response,
         (error) => {
-            const { status } = error.response;
+            const {data , status } = error.response;
             console.log(status, "error.responseerror.responseerror.response");
 
             if (status === 401) {

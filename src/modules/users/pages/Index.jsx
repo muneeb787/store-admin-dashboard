@@ -20,7 +20,9 @@ const ViewIndex = () => {
 
 
   useEffect(() => {
-
+    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
+      navigate('/login')
+  }
     axiosInstance
       .get('/users')
       .then((res) => {

@@ -15,6 +15,9 @@ const Update = () => {
   console.log(userData);
   const axiosInstance = useAxios();
   useEffect(() => {
+    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
+      navigate('/login')
+  }
     axiosInstance
       .get(`/user/${id}`)
       .then((res) => {
