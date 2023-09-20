@@ -43,7 +43,7 @@ const createAxiosInstance = (token) => {
 
 const useAxios = () => {
     const token = localStorage.getItem("token");
-    console.log(token, "tokentokentokentoken");
+    // console.log(token, "tokentokentokentoken");
     return createAxiosInstance(token);
 };
 
