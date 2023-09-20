@@ -17,5 +17,6 @@ const orderRouters = [
         path: "order/view/:id",
         element: < ViewOrder/>
     }
-]
+   
+];
 export default orderRouters;
