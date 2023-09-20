@@ -16,11 +16,11 @@ const Dashboard = () => {
     const axiosInstance = useAxios();
     const navigate = useNavigate()
 
-    // useEffect(() => {
-    //     if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
-    //         navigate('/login')
-    //     }
-    // }, [])
+    useEffect(() => {
+        if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
+            navigate('/login')
+        }
+    }, [])
 
     return (
         <>

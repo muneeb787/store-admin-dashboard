@@ -4,11 +4,19 @@ import { toast } from "react-toastify";
 // import { useNavigate, useParams } from "react-router-dom";
 
 import * as Yup from "Yup";
+import { useEffect } from "react";
 
 
 const Category = () => {
 
+  useEffect(() => {
+    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
+      navigate('/login')
+    }
+  }, [])
 
+
+  const axiosInstance = useAxios();
   const schema = Yup.object({
     name: Yup.string().min(3).max(30).required("Required"),
   })
@@ -18,20 +26,29 @@ const Category = () => {
       name: "",
     },
     validationSchema: schema,
-    onSubmit: (values) => {
-      console.log(values)
-      const axiosInstance = useAxios();
+    onSubmit: (values, { setSubmitting, resetForm }) => {
       axiosInstance
         .post('/category', values) // Replace '/api/your-endpoint' with your API endpoint
-        .then((res) => toast.success(res.message))
-        .catch((err) => console.log(err));
+        .then((response) => {
+          console.log('Form submitted successfully:', response.data);
+
+          // You can handle success actions here
+          resetForm();
+          toast.success("Category Created successfully")
+        })
+        .catch((error) => {
+          console.error('Error submitting form:', error);
+          // You can handle error actions here
+        })
+        .finally(() => {
+          setSubmitting(false); // Set form to not submitting
+        });
     },
 
     // onSubmit:(values)=>console.log(values),
   });
   return (
     <>
-
       <FormikProvider value={formik}>
         {/* <form > */}
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -42,7 +59,6 @@ const Category = () => {
           </div>
           <form onSubmit={formik.handleSubmit} >
             <div className="p-6.5">
-
               <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
                   Name
@@ -52,7 +68,7 @@ const Category = () => {
                   placeholder="Enter Category"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {formik.touched.category_name && formik.errors.category_name && <h3>{formik.errors.category_name}</h3>}
+                {formik.touched.name && formik.errors.name && <h3>{formik.errors.name}</h3>}
               </div>
 
               <button type="submit" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
@@ -61,8 +77,7 @@ const Category = () => {
             </div>
           </form>
         </div>
-        {/* </form> */}
-      </FormikProvider>
+    </FormikProvider >
     </>
   );
 };
