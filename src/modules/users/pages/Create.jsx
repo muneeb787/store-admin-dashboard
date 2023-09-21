@@ -1,14 +1,11 @@
-import { Field, FormikProvider, useFormik , getIn } from 'formik';
+import { Field, FormikProvider, useFormik, getIn } from 'formik';
 import useAxios from '../../../hooks/axios';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
-
-import * as yup from 'Yup';
-
+import * as yup from 'yup';
 const Create = () => {
-
   const navigate = useNavigate();
   const axiosInstance = useAxios();
 
@@ -21,8 +18,14 @@ const Create = () => {
 
   const schema = yup.object().shape({
     name: yup.string().required('Required').min(3).max(30),
-    email: yup.string().email('This must be an Email').required('Email is required'),
-    password: yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
+    email: yup
+      .string()
+      .email('This must be an Email')
+      .required('Email is required'),
+    password: yup
+      .string()
+      .required('Password is required')
+      .min(8, 'Password must be at least 8 characters'),
     role: yup.string().required('Required').min(3),
     address: yup.object().shape({
       country: yup.string().required('Required').min(3).max(30),
@@ -39,18 +42,19 @@ const Create = () => {
       email: '',
       password: '',
       role: '',
-      address: { // Provide an empty object for the address field
+      address: {
+        // Provide an empty object for the address field
         house: '',
         street: '',
         city: '',
         country: '',
         postal_code: '',
       },
-      number: ''
+      number: '',
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      console.log(values, "valuessssssssssssssssssssss")
+      console.log(values, 'valuessssssssssssssssssssss');
       axiosInstance
         .post(`/user`, values)
         .then((response) => {
@@ -141,9 +145,10 @@ const Create = () => {
                   name="address.house"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {getIn(formik.touched, "address.house") && getIn(formik.errors, "address.house") && (
-                  <h3>{getIn(formik.errors, "address.house")}</h3>
-                )}
+                {getIn(formik.touched, 'address.house') &&
+                  getIn(formik.errors, 'address.house') && (
+                    <h3>{getIn(formik.errors, 'address.house')}</h3>
+                  )}
               </div>
               {/*    street */}
               <div className="mb-4.5">
@@ -154,9 +159,10 @@ const Create = () => {
                   name="address.street"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {getIn(formik.touched, "address.street") && getIn(formik.errors, "address.street") && (
-                  <h3>{getIn(formik.errors, "address.street")}</h3>
-                )}
+                {getIn(formik.touched, 'address.street') &&
+                  getIn(formik.errors, 'address.street') && (
+                    <h3>{getIn(formik.errors, 'address.street')}</h3>
+                  )}
               </div>
               {/* city */}
               <div className="mb-4.5">
@@ -167,9 +173,10 @@ const Create = () => {
                   name="address.city"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {getIn(formik.touched, "address.city") && getIn(formik.errors, "address.city") && (
-                  <h3>{getIn(formik.errors, "address.city")}</h3>
-                )}
+                {getIn(formik.touched, 'address.city') &&
+                  getIn(formik.errors, 'address.city') && (
+                    <h3>{getIn(formik.errors, 'address.city')}</h3>
+                  )}
               </div>
               {/* country */}
               <div className="mb-4.5">
@@ -180,9 +187,10 @@ const Create = () => {
                   name="address.country"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {getIn(formik.touched, "address.country") && getIn(formik.errors, "address.country") && (
-                  <h3>{getIn(formik.errors, "address.country")}</h3>
-                )}
+                {getIn(formik.touched, 'address.country') &&
+                  getIn(formik.errors, 'address.country') && (
+                    <h3>{getIn(formik.errors, 'address.country')}</h3>
+                  )}
               </div>
               {/* postal_code */}
               <div className="mb-4.5">
@@ -193,9 +201,10 @@ const Create = () => {
                   name="address.postal_code"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {getIn(formik.touched, "address.postal_code") && getIn(formik.errors, "address.postal_code") && (
-                  <h3>{getIn(formik.errors, "address.postal_code")}</h3>
-                )}
+                {getIn(formik.touched, 'address.postal_code') &&
+                  getIn(formik.errors, 'address.postal_code') && (
+                    <h3>{getIn(formik.errors, 'address.postal_code')}</h3>
+                  )}
               </div>
               {/* number */}
               <div className="mb-4.5">
