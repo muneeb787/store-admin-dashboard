@@ -152,9 +152,9 @@ const Update = () => {
                       name="address.house"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
-                    {formik.touched.address?.house &&
-                      formik.errors.address?.house && (
-                        <h3>{formik.errors.address.house}</h3>
+                    {getIn(formik.touched, 'address.house') &&
+                      getIn(formik.errors, 'address.house') && (
+                        <h3>{getIn(formik.errors, 'address.house')}</h3>
                       )}
                   </div>
                   {/* Street */}
@@ -166,9 +166,9 @@ const Update = () => {
                       name="address.street"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
-                    {formik.touched.address?.street &&
-                      formik.errors.address?.street && (
-                        <h3>{formik.errors.address.street}</h3>
+                    {getIn(formik.touched, 'address.street') &&
+                      getIn(formik.errors, 'address.street') && (
+                        <h3>{getIn(formik.errors, 'address.street')}</h3>
                       )}
                   </div>
                 </div>
@@ -182,9 +182,9 @@ const Update = () => {
                   name="address.city"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {formik.touched.address?.city &&
-                  formik.errors.address?.city && (
-                    <h3>{formik.errors.address.city}</h3>
+                {getIn(formik.touched, 'address.city') &&
+                  getIn(formik.errors, 'address.city') && (
+                    <h3>{getIn(formik.errors, 'address.city')}</h3>
                   )}
               </div>
               {/* Country */}
@@ -196,9 +196,9 @@ const Update = () => {
                   name="address.country"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {formik.touched.address?.country &&
-                  formik.errors.address?.country && (
-                    <h3>{formik.errors.address.country}</h3>
+                {getIn(formik.touched, 'address.country') &&
+                  getIn(formik.errors, 'address.country') && (
+                    <h3>{getIn(formik.errors, 'address.country')}</h3>
                   )}
               </div>
               {/* Postal Code */}
@@ -210,9 +210,9 @@ const Update = () => {
                   name="address.postal_code"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-                {formik.touched.address?.postal_code &&
-                  formik.errors.address?.postal_code && (
-                    <h3>{formik.errors.address.postal_code}</h3>
+                {getIn(formik.touched, 'address.postal_code') &&
+                  getIn(formik.errors, 'address.postal_code') && (
+                    <h3>{getIn(formik.errors, 'address.postal_code')}</h3>
                   )}
               </div>
               {/* Number */}
