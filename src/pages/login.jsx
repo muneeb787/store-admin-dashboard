@@ -14,11 +14,11 @@ const Login = () => {
 
     const navigate = useNavigate()
 
-    // useEffect(() => {
-    //     if (localStorage.getItem('token') && localStorage.getItem('token') != "undefined" ) {
-    //         navigate('/dashboard')
-    //     }
-    // }, [])
+    useEffect(() => {
+        if (localStorage.getItem('token') && localStorage.getItem('token') != "undefined" ) {
+            navigate('/dashboard')
+        }
+    }, [])
 
     const formik = useFormik({
         initialValues: {
@@ -35,8 +35,6 @@ const Login = () => {
                     localStorage.setItem('token', res.data.accessToken
                     );
                     navigate("/dashboard")
-                    // window.location.href = '/dashboard';
-
                 })
                 .catch(err => {
                     toast.error(err.response.data.message)
@@ -44,7 +42,7 @@ const Login = () => {
                 })
         }
     })
-
+    // formik.setFieldValue("email" , "ali@gmail.com")
     const { touched, errors, values } = formik;
 
     return (

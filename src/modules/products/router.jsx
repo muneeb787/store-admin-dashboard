@@ -3,10 +3,10 @@ import ProductList from "./pages/index.jsx";
 import ProductView from "./pages/view.jsx";
 import ProductUpdate from "./pages/update.jsx";
 
- const ProdutRoutes=[
+const ProdutRoutes = [
   {
-    path:"/product/create",
-    element:<Create/>
+    path: "/product/create",
+    element: <Create />
   },
   {
     path:"/product/index",

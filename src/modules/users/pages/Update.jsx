@@ -13,7 +13,9 @@ const Update = () => {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    // Fetch the user data based on the userId
+    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
+      navigate('/login')
+  }
     axiosInstance
       .get(`/user/${userId}`)
       .then((res) => {

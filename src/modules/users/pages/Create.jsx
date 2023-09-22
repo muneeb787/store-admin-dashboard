@@ -8,6 +8,19 @@ import * as yup from 'yup';
 const Create = () => {
   const navigate = useNavigate();
   const axiosInstance = useAxios();
+  useEffect(() => {
+    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
+      navigate('/login')
+  }
+    axiosInstance
+      .post(`/user`)
+      .then((res) => {
+        setUserData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   // const addressSchema = yup.object({
   //   country: yup.string().required('Required').min(3).max(30),
