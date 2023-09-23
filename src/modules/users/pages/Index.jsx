@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import useAxios from '../../../hooks/axios';
 import Loader from '../../../components/lodaer';
 import ViewUserDetails from '../components/ViewUserDetails';
-import Update from '../../users/pages/Update';
 import { toast } from 'react-toastify';
 
 const ViewIndex = () => {
@@ -14,7 +13,7 @@ const ViewIndex = () => {
   const [showUser, setShowUser] = useState(false);
 
   const showHandleClick = () => setShowUser(!showUser);
-  const updateHandleClick = () => setUpdateUser(!updateUser);
+
 
   const axiosInstance = useAxios();
 
@@ -36,11 +35,12 @@ const ViewIndex = () => {
       .finally(() => {
         setLoader(false);
       });
-  })
+  },[])
     
 
   useEffect(() => {
-    fetchData()
+
+    // fetchData()
     
   }, []);
 
@@ -89,8 +89,9 @@ const ViewIndex = () => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user, index) => {
-                  return (
+                  {users.map((user, index) => {
+                  //console.log(`user id : ${user._id}, index :${index}`)
+                  return (                    
                     <tr>
                       <td className="border-b border-[#eee] py-5 dark:border-strokedark xl:pl-11">
                         <h5 className="font-medium text-black dark:text-white">
@@ -141,7 +142,9 @@ const ViewIndex = () => {
                           {showUser && <ViewUserDetails />}
                           <button
                             className="hover:text-primary"
-                            onClick={()=>{deleteUser(user._id)}}
+                            onClick={() => {
+                              deleteUser(user._id);
+                            }}
                           >
                             <svg
                               className="fill-current"
@@ -171,7 +174,9 @@ const ViewIndex = () => {
                           </button>
                           <button
                             className="hover:text-primary"
-                            onClick={()=>{navigate(`/user/${user._id}`)}}
+                            onClick={() => { 
+                              navigate(`/user/${user._id}`);
+                            }}
                           >
                             <svg
                               className="fill-current"
