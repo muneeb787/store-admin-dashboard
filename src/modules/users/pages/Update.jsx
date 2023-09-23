@@ -3,7 +3,7 @@ import useAxios from '../../../hooks/axios';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import * as yup from 'yup';
+import * as Yup from 'Yup';
 
 const Update = () => {
   const navigate = useNavigate();
@@ -13,9 +13,12 @@ const Update = () => {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
-      navigate('/login')
-  }
+    if (
+      !localStorage.getItem('token') ||
+      localStorage.getItem('token') == 'undefined'
+    ) {
+      navigate('/login');
+    }
     axiosInstance
       .get(`/user/${userId}`)
       .then((res) => {
@@ -28,21 +31,20 @@ const Update = () => {
       });
   }, [axiosInstance, userId]);
 
-  const schema = yup.object().shape({
-    name: yup.string().required('Required').min(3).max(30),
-    email: yup
-      .string()
+  const schema = Yup.object().shape({
+    name: Yup.string().required('Required').min(3).max(30),
+    email: Yup.string()
       .email('This must be an Email')
       .required('Email is required'),
-    password: yup.string().min(8, 'Password must be at least 8 characters'), // Remove 'required' for password
-    role: yup.string().required('Required').min(3),
-    address: yup.object().shape({
-      country: yup.string().required('Required').min(3).max(30),
-      city: yup.string().required('Required').min(3).max(30),
-      house: yup.string().required('Required').min(3).max(30),
-      postal_code: yup.string().required('Required').min(3).max(30),
+    password: Yup.string().min(8, 'Password must be at least 8 characters'), // Remove 'required' for password
+    role: Yup.string().required('Required').min(3),
+    address: Yup.object().shape({
+      country: Yup.string().required('Required').min(3).max(30),
+      city: Yup.string().required('Required').min(3).max(30),
+      house: Yup.string().required('Required').min(3).max(30),
+      postal_code: Yup.string().required('Required').min(3).max(30),
     }),
-    number: yup.string().required('Required').min(11).max(13),
+    number: Yup.string().required('Required').min(11).max(13),
   });
 
   const formik = useFormik({

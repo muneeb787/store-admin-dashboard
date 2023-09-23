@@ -14,8 +14,11 @@ const ProductUpdate = () => {
   const navigate = useNavigate();
   console.log(productdata);
   useEffect(() => {
-    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
-      navigate('/login')
+    if (
+      !localStorage.getItem('token') ||
+      localStorage.getItem('token') == 'undefined'
+    ) {
+      navigate('/login');
     }
     axiosInstance
       .get(`/product/${id}`)
@@ -28,12 +31,11 @@ const ProductUpdate = () => {
   }, []);
 
   useEffect(() => {
-    formik.setFieldValue("name" , productdata.name)
-        formik.setFieldValue("price" , productdata.price)
-        formik.setFieldValue("description" , productdata.description)
-        formik.setFieldValue("catagory_id" , productdata.catagory_id)
-  }, [productdata])
-  
+    formik.setFieldValue('name', productdata.name);
+    formik.setFieldValue('price', productdata.price);
+    formik.setFieldValue('description', productdata.description);
+    formik.setFieldValue('catagory_id', productdata.catagory_id);
+  }, [productdata]);
 
   const axiosInstance = useAxios();
   const [data, setData] = useState([]);
@@ -61,7 +63,7 @@ const ProductUpdate = () => {
       name: '',
       price: '',
       description: '',
-      catagory_id: ''
+      catagory_id: '',
     },
     validationSchema: schema,
     onSubmit: (values, { setSubmitting, resetForm }) => {
@@ -137,7 +139,6 @@ const ProductUpdate = () => {
                 )}
               </div>
 
-
               <div className="mb-4.5">
                 <label className="mb-3 block text-black dark:text-white">
                   Select Category
@@ -198,7 +199,6 @@ const ProductUpdate = () => {
                   </span>
                 </div>
               </div>
-
 
               <div className="mb-4.5">
                 <label className="mb-3 block text-black dark:text-white">

@@ -4,14 +4,17 @@ import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import * as yup from 'yup';
+import * as Yup from 'Yup';
 const Create = () => {
   const navigate = useNavigate();
   const axiosInstance = useAxios();
   useEffect(() => {
-    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
-      navigate('/login')
-  }
+    if (
+      !localStorage.getItem('token') ||
+      localStorage.getItem('token') == 'undefined'
+    ) {
+      navigate('/login');
+    }
     axiosInstance
       .post(`/user`)
       .then((res) => {
@@ -22,31 +25,29 @@ const Create = () => {
       });
   }, []);
 
-  // const addressSchema = yup.object({
-  //   country: yup.string().required('Required').min(3).max(30),
-  //   city: yup.string().required('Required').min(3).max(30),
-  //   house: yup.string().required('Required').min(3).max(30),
-  //   postal_code: yup.string().required('Required').min(3).max(30),
+  // const addressSchema = Yup.object({
+  //   country: Yup.string().required('Required').min(3).max(30),
+  //   city: Yup.string().required('Required').min(3).max(30),
+  //   house: Yup.string().required('Required').min(3).max(30),
+  //   postal_code: Yup.string().required('Required').min(3).max(30),
   // });
 
-  const schema = yup.object().shape({
-    name: yup.string().required('Required').min(3).max(30),
-    email: yup
-      .string()
+  const schema = Yup.object().shape({
+    name: Yup.string().required('Required').min(3).max(30),
+    email: Yup.string()
       .email('This must be an Email')
       .required('Email is required'),
-    password: yup
-      .string()
+    password: Yup.string()
       .required('Password is required')
       .min(8, 'Password must be at least 8 characters'),
-    role: yup.string().required('Required').min(3),
-    address: yup.object().shape({
-      country: yup.string().required('Required').min(3).max(30),
-      city: yup.string().required('Required').min(3).max(30),
-      house: yup.string().required('Required').min(3).max(30),
-      postal_code: yup.string().required('Required').min(3).max(30),
+    role: Yup.string().required('Required').min(3),
+    address: Yup.object().shape({
+      country: Yup.string().required('Required').min(3).max(30),
+      city: Yup.string().required('Required').min(3).max(30),
+      house: Yup.string().required('Required').min(3).max(30),
+      postal_code: Yup.string().required('Required').min(3).max(30),
     }), // Include the address object within your main schema
-    number: yup.string().required('Required').min(11).max(13),
+    number: Yup.string().required('Required').min(11).max(13),
   });
 
   const formik = useFormik({
