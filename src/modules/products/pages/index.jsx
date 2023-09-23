@@ -56,7 +56,7 @@ const ProductList = () => {
               <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                 Product Name
               </th>
-              <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+              <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white text-left">
                 Price
               </th>
               <th className="py-4 px-4 font-medium text-black dark:text-white">
@@ -79,13 +79,11 @@ const ProductList = () => {
                     {ele.name}
                   </h5>
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                <td className="border-b text-left border-[#eee] py-5 dark:border-strokedark xl:pl-5">
                   <h5 className="font-medium text-black dark:text-white">
                     {ele.price}
                   </h5>
                 </td>
-
-
 
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
