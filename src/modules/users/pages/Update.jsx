@@ -1,4 +1,4 @@
-import { Field, FormikProvider, useFormik } from 'formik';
+import { Field, FormikProvider, useFormik, getIn } from 'formik';
 import useAxios from '../../../hooks/axios';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,7 +8,8 @@ import * as Yup from 'Yup';
 const Update = () => {
   const navigate = useNavigate();
   const axiosInstance = useAxios();
-  const { userId } = useParams(); // Assuming you have a route parameter for the user ID
+  const { id } = useParams(); // Assuming you have a route parameter for the user ID
+  console.log(`user id : ${id}`);
 
   const [userData, setUserData] = useState(null);
 
@@ -20,8 +21,11 @@ const Update = () => {
       navigate('/login');
     }
     axiosInstance
-      .get(`/user/${userId}`)
+      .get(`/user/${id}`)
       .then((res) => {
+        if (res === undefined) {
+          console.log('This is undefined object, please check again!');
+        }
         toast.success(res.data.message);
         // Set the user data for populating the form
         setUserData(res.data.user);
@@ -29,7 +33,7 @@ const Update = () => {
       .catch((err) => {
         console.error(err);
       });
-  }, [axiosInstance, userId]);
+  }, [axiosInstance, id]);
 
   const schema = Yup.object().shape({
     name: Yup.string().required('Required').min(3).max(30),
@@ -65,11 +69,11 @@ const Update = () => {
     onSubmit: (values) => {
       console.log(values, 'valuessssssssssssssssssssss');
       axiosInstance
-        .put(`/user/${userId}`, values) // Assuming a PUT request for updating the user
+        .put(`/user/${id}`,values) // Assuming a PUT request for updating the user
         .then((response) => {
-          console.log('Form submitted successfully:', response.data);
+          console.log('Form submitted successfully:', response.data.message);
           toast.success('User updated successfully');
-          navigate(-1);
+          navigate(`/users`);
         })
         .catch((error) => {
           console.error('Error submitting form:', error);
