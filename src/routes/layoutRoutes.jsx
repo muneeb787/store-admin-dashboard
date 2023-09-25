@@ -1,6 +1,6 @@
 import Dashboard from '../modules/dashboard/pages/dashboard.jsx';
-import { DashboardRoutes } from '../modules/dashboard/router.jsx';
 import UserRoutes from '../modules/users/router.jsx';
+import DashboardRoutes from '../modules/dashboard/router.jsx';
 import Profile from '../pages-copy/Profile.jsx';
 import ProductRoutes from "../modules/products/router.jsx"
 import CategoryRoutes from "../modules/category/router.jsx"
@@ -16,10 +16,10 @@ export const LayoutRoutes = [
     path: '/',
     element: <Dashboard />,
   },
-    ...DashboardRoutes,
-    ...ProductRoutes,
+  ...DashboardRoutes,
+  ...ProductRoutes,
   ...CategoryRoutes,
-    ...UserRoutes
+  ...UserRoutes
 ]
 
 
