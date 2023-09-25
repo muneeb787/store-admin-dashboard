@@ -3,19 +3,15 @@ import { useNavigate } from "react-router-dom";
 import useAxios from "../../../hooks/axios";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-import { useErrorBoundary } from 'react-error-boundary';
+
 
 const ProductView = () => {
     const { id } = useParams();
     const axiosInstance=useAxios();
   const [data, setData] = useState({});
   const navigate = useNavigate();
-   const setBoundary = useErrorBoundary();
 
   useEffect(() => {
-    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
-      navigate('/login')
-  }
     axiosInstance.get(`/product/${id}`)
       .then((res) => {
         toast.success("Product Details");
@@ -23,7 +19,6 @@ const ProductView = () => {
       })
       .catch((err) => {
         console.log(err);
-          setBoundary(err);
       });
   }, []);
 console.log(data)

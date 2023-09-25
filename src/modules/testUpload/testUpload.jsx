@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import useAxios from '../../hooks/axios';
-import { useErrorBoundary } from 'react-error-boundary';
+
 function TestUpload() {
- const setBoundary = useErrorBoundary();
     const [selectedFile, setSelectedFile] = useState(null);
 
     const handleFileChange = (event) => {
@@ -22,7 +21,6 @@ function TestUpload() {
             // Optionally, you can display a success message or update the image list.
         } catch (error) {
             console.error('Error uploading image:', error);
-              setBoundary(error);
         }
     };
 
