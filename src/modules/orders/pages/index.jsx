@@ -1,67 +1,57 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import useAxios from '../../../hooks/axios';
 import Loader from '../../../components/lodaer';
-import ViewUserDetails from '../components/ViewUserDetails';
-import { toast } from 'react-toastify';
+import useAxios from '../../../hooks/axios';
+import { useNavigate } from 'react-router-dom';
+import ViewOrder from './viewOrder';
 import { useErrorBoundary } from 'react-error-boundary';
-
-const ViewIndex = () => {
-  const navigate = useNavigate();
-   const setBoundary = useErrorBoundary();
-  const [users, setUsers] = useState([]);
+const OrderIndex = () => {
+  const [orders, setOrders] = useState([]);
   const [loader, setLoader] = useState(true);
-  const [showUser, setShowUser] = useState(false);
-
-  const showHandleClick = () => setShowUser(!showUser);
-
-
+  const [dataFetched, setDataFetched] = useState(false);
+  const navigate = useNavigate();
   const axiosInstance = useAxios();
-
+   const setBoundary = useErrorBoundary();
 
   useEffect(() => {
-    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
-      navigate('/login')
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get('/orders');
+        console.log(response.data);
+        setOrders(response.data.getAllOrder);
+        setDataFetched(true); // new line added
+        setLoader(false); // new line of code for non-repeatition of fetching
+      } catch (error) {
+        console.error('Error fetching Data', error);
+          setBoundary(error);
+      } finally {
+        setLoader(false);
+      }
+    };
+    if (!dataFetched) {
+      // new line
+      fetchData();
     }
-    axiosInstance
-      .get('/users')
-      .then((res) => {
-        console.log(res.data.users);
-        setUsers(res.data.users);
-        console.log(users, 'Users loaded');
-      })
-      .catch((err) => {
-        console.log(err);
-          setBoundary(err);
-      })
-      .finally(() => {
-        setLoader(false);
-      });
-  },[])
-    
+  }, [axiosInstance, dataFetched]);
 
-  useEffect(() => {
-
-    // fetchData()
-    
-  }, []);
-
-  const deleteUser = (id) => {
-    axiosInstance
-      .delete(`/user/${id}`)
-      .then((res) => {
-        console.log(res.data.users);
-        fetchData()
-        toast.success("User Deleted Successfully")
-        console.log(users, 'User Deleted');
-      })
-      .catch((err) => {
-        console.log(err);
-        setBoundary(err);
-      })
-      .finally(() => {
-        setLoader(false);
-      });
+  const handleViewOrder = (orderId) => {
+    navigate(`/order/view/${orderId}`);
+  };
+  const handleDeleteOrder = async (orderId) => {
+    console.log('Deleting order with ID:', orderId);
+    try {
+      await axiosInstance.delete(`/delete/${orderId}`);
+      // const isOrderDeleted = orders.some((order) => order._id === orderId);
+      // if(isOrderDeleted) {
+      setOrders(orders.filter((order) => order._id !== orderId));
+      console.log('Order deleted successfully');
+      // }
+      // else {
+      //   console.log('Order not found or already deleted');
+      // }
+    } catch (error) {
+      console.error('Error deleting order', error);
+        setBoundary(error);
+    }
   };
 
   return (
@@ -78,13 +68,16 @@ const ViewIndex = () => {
                     Sr#
                   </th>
                   <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                    Name
+                    Order Id
                   </th>
                   <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                    Email
+                    No. of Ordered Products
+                  </th>
+                  <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                    Transaction Id
                   </th>
                   <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                    Role
+                    Status
                   </th>
                   <th className="py-4 px-4 font-medium text-black dark:text-white">
                     Actions
@@ -92,37 +85,40 @@ const ViewIndex = () => {
                 </tr>
               </thead>
               <tbody>
-                  {users.map((user, index) => {
-                  //console.log(`user id : ${user._id}, index :${index}`)
-                  return (                    
-                    <tr >
-                      <td className="border-b border-[#eee] py-5 dark:border-strokedark xl:pl-11">
+                {orders.map((order, index) => {
+                  return (
+                    <tr key={order._id}>
+                      <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                         <h5 className="font-medium text-black dark:text-white">
                           {index + 1}
                         </h5>
-                        {/* <p className="text-sm">$0.00</p> */}
+                        {/* <p className="text-sm">price</p> */}
                       </td>
-
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <p className="text-black dark:text-white">
-                          {user.name}
+                          {order._id}
                         </p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <p className="text-black dark:text-white">
-                          {user.email}
+                          {order.products.length}
+                        </p>
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        <p className="text-black dark:text-white">
+                          {order.transaction_id}
                         </p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <p className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
-                          {user.role}
+                          {order.status}
                         </p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <div className="flex items-center space-x-3.5">
                           <button
                             className="hover:text-primary"
-                            onClick={showHandleClick}
+                            onClick={() => handleViewOrder(order._id)}
                           >
                             <svg
                               className="fill-current"
@@ -141,14 +137,14 @@ const ViewIndex = () => {
                                 fill=""
                               />
                             </svg>
+                            View
                           </button>
-                          {showUser && <ViewUserDetails />}
+                          {/*Delete Button */}
                           <button
                             className="hover:text-primary"
-                            onClick={() => {
-                              deleteUser(user._id);
-                            }}
+                            onClick={() => handleDeleteOrder(order._id)}
                           >
+                           
                             <svg
                               className="fill-current"
                               width="18"
@@ -174,31 +170,32 @@ const ViewIndex = () => {
                                 fill=""
                               />
                             </svg>
+                            Delete
                           </button>
-                          <button
-                            className="hover:text-primary"
-                            onClick={() => { 
-                              navigate(`/user/${user._id}`);
-                            }}
-                          >
-                            <svg
-                              className="fill-current"
-                              width="18"
-                              height="18"
-                              viewBox="0 0 18 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
+                          {/* <button
+                              onClick={() =>
+                                navigate(`/order/update/${order._id}`)
+                              }
+                              className="hover:text-primary"
                             >
-                              <path
-                                d="M16.8754 11.6719C16.5379 11.6719 16.2285 11.9531 16.2285 12.3187V14.8219C16.2285 15.075 16.0316 15.2719 15.7785 15.2719H2.22227C1.96914 15.2719 1.77227 15.075 1.77227 14.8219V12.3187C1.77227 11.9812 1.49102 11.6719 1.12539 11.6719C0.759766 11.6719 0.478516 11.9531 0.478516 12.3187V14.8219C0.478516 15.7781 1.23789 16.5375 2.19414 16.5375H15.7785C16.7348 16.5375 17.4941 15.7781 17.4941 14.8219V12.3187C17.5223 11.9531 17.2129 11.6719 16.8754 11.6719Z"
-                                fill=""
-                              />
-                              <path
-                                d="M8.55074 12.3469C8.66324 12.4594 8.83199 12.5156 9.00074 12.5156C9.16949 12.5156 9.31012 12.4594 9.45074 12.3469L13.4726 8.43752C13.7257 8.1844 13.7257 7.79065 13.5007 7.53752C13.2476 7.2844 12.8539 7.2844 12.6007 7.5094L9.64762 10.4063V2.1094C9.64762 1.7719 9.36637 1.46252 9.00074 1.46252C8.66324 1.46252 8.35387 1.74377 8.35387 2.1094V10.4063L5.40074 7.53752C5.14762 7.2844 4.75387 7.31252 4.50074 7.53752C4.24762 7.79065 4.27574 8.1844 4.50074 8.43752L8.55074 12.3469Z"
-                                fill=""
-                              />
-                            </svg>
-                          </button>
+                              <svg
+                                className="fill-current"
+                                width="18"
+                                height="18"
+                                viewBox="0 0 18 18"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M16.8754 11.6719C16.5379 11.6719 16.2285 11.9531 16.2285 12.3187V14.8219C16.2285 15.075 16.0316 15.2719 15.7785 15.2719H2.22227C1.96914 15.2719 1.77227 15.075 1.77227 14.8219V12.3187C1.77227 11.9812 1.49102 11.6719 1.12539 11.6719C0.759766 11.6719 0.478516 11.9531 0.478516 12.3187V14.8219C0.478516 15.7781 1.23789 16.5375 2.19414 16.5375H15.7785C16.7348 16.5375 17.4941 15.7781 17.4941 14.8219V12.3187C17.5223 11.9531 17.2129 11.6719 16.8754 11.6719Z"
+                                  fill=""
+                                />
+                                <path
+                                  d="M8.55074 12.3469C8.66324 12.4594 8.83199 12.5156 9.00074 12.5156C9.16949 12.5156 9.31012 12.4594 9.45074 12.3469L13.4726 8.43752C13.7257 8.1844 13.7257 7.79065 13.5007 7.53752C13.2476 7.2844 12.8539 7.2844 12.6007 7.5094L9.64762 10.4063V2.1094C9.64762 1.7719 9.36637 1.46252 9.00074 1.46252C8.66324 1.46252 8.35387 1.74377 8.35387 2.1094V10.4063L5.40074 7.53752C5.14762 7.2844 4.75387 7.31252 4.50074 7.53752C4.24762 7.79065 4.27574 8.1844 4.50074 8.43752L8.55074 12.3469Z"
+                                  fill=""
+                                />
+                              </svg>
+                            </button> */}
                         </div>
                       </td>
                     </tr>
@@ -213,4 +210,4 @@ const ViewIndex = () => {
   );
 };
 
-export default ViewIndex;
+export default OrderIndex;

@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxios from "../../../hooks/axios";
 import { toast } from "react-toastify";
-
+import { useErrorBoundary } from 'react-error-boundary';
 
 
 const CategoryList = () => {
 
-    const axiosInstance=useAxios();
-const [data, setData] = useState([]);
+  const axiosInstance = useAxios();
+  const [data, setData] = useState([]);
   const navigate = useNavigate();
+   const setBoundary = useErrorBoundary();
 
   const fetchData = () => {
     axiosInstance.get("/category")
@@ -19,53 +20,64 @@ const [data, setData] = useState([]);
       })
       .catch((err) => {
         console.log(err);
+          setBoundary(err);
       });
   }
 
-    const deleteUser = (idToDelete) => {
-      console.log(idToDelete, "deleteUser");
-        axiosInstance.delete(`/category/${idToDelete}`)
-        .then((res) => {
-          toast.success("Category Deleted succussfully");
-          fetchData()
-        })
-        .catch((err) => { 
-          toast.error("An error occurred");
-        });
-    };
+  const deleteUser = (idToDelete) => {
+    console.log(idToDelete, "deleteUser");
+    axiosInstance.delete(`/category/${idToDelete}`)
+      .then((res) => {
+        fetchData()
+        toast.success("Category Deleted succussfully");
+      })
+      .catch((err) => {
+        toast.error("An error occurred");
+          setBoundary(err);
+      });
+  };
 
   useEffect(() => {
+    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
+      navigate('/login')
+    }
     fetchData()
   }, []);
 
 
-    return (
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div className="max-w-full overflow-x-auto">
-          <table className="w-full table-auto">
-            <thead>
-              <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                  CategoryList
-                </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            
-            <tbody>
-            {data.map((ele) => (
-              
+  return (
+    <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="max-w-full overflow-x-auto">
+        <table className="w-full table-auto">
+          <thead>
+            <tr className="bg-gray-2 text-left dark:bg-meta-4">
+              <th className="min-w-[10px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                Sr#
+              </th>
+              <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                Category Name
+              </th>
+              <th className="py-4 px-4 font-medium text-black dark:text-white">
+                Actions
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {data.map((ele , index) => (
+
               <tr key={ele._id}>
+                <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                  <h5 className="font-medium text-black dark:text-white">
+                    {index+1}
+                  </h5>
+                </td>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
                     {ele.name}
                   </h5>
                 </td>
-                <h1>{ele._id}</h1>
 
-              
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
 
@@ -97,19 +109,18 @@ const [data, setData] = useState([]);
                       </svg>
                     </button>
 
-                    
+
                   </div>
                 </td>
-              
+
               </tr>
-              ))}
-            </tbody>
-            
-            </table>
-        </div>
+            ))}
+          </tbody>
+
+        </table>
       </div>
-    );
-  };
-  
-  export default CategoryList;
-  
+    </div>
+  );
+};
+
+export default CategoryList;

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import Header from '../components/header';
+import Header from './components/header';
 
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../components/sidebar';
+import Sidebar from './components/sidebar';
 
 const DefaultLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
