@@ -4,7 +4,7 @@ import Dashboard from "./pages/dashboard";
 const DashboardRoutes = [
     {
         title: "Dashboard",
-        path: "/dashboard",
+        path: "dashboard",
         element: <Dashboard />
     },
 ]
