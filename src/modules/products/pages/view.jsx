@@ -12,6 +12,9 @@ const ProductView = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!localStorage.getItem('token') || localStorage.getItem('token') == "undefined") {
+      navigate('/login')
+  }
     axiosInstance.get(`/product/${id}`)
       .then((res) => {
         toast.success("Product Details");
