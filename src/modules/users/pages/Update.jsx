@@ -1,22 +1,31 @@
-import { Field, FormikProvider, useFormik } from 'formik';
+import { Field, FormikProvider, useFormik, getIn } from 'formik';
 import useAxios from '../../../hooks/axios';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import * as yup from 'yup';
+import * as Yup from 'Yup';
 
 const Update = () => {
   const navigate = useNavigate();
   const axiosInstance = useAxios();
-  const { userId } = useParams(); // Assuming you have a route parameter for the user ID
+  const { id } = useParams(); // Assuming you have a route parameter for the user ID
+  console.log(`user id : ${id}`);
 
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    // Fetch the user data based on the userId
+    if (
+      !localStorage.getItem('token') ||
+      localStorage.getItem('token') == 'undefined'
+    ) {
+      navigate('/login');
+    }
     axiosInstance
-      .get(`/user/${userId}`)
+      .get(`/user/${id}`)
       .then((res) => {
+        if (res === undefined) {
+          console.log('This is undefined object, please check again!');
+        }
         toast.success(res.data.message);
         // Set the user data for populating the form
         setUserData(res.data.user);
@@ -24,23 +33,22 @@ const Update = () => {
       .catch((err) => {
         console.error(err);
       });
-  }, [axiosInstance, userId]);
+  }, [axiosInstance, id]);
 
-  const schema = yup.object().shape({
-    name: yup.string().required('Required').min(3).max(30),
-    email: yup
-      .string()
+  const schema = Yup.object().shape({
+    name: Yup.string().required('Required').min(3).max(30),
+    email: Yup.string()
       .email('This must be an Email')
       .required('Email is required'),
-    password: yup.string().min(8, 'Password must be at least 8 characters'), // Remove 'required' for password
-    role: yup.string().required('Required').min(3),
-    address: yup.object().shape({
-      country: yup.string().required('Required').min(3).max(30),
-      city: yup.string().required('Required').min(3).max(30),
-      house: yup.string().required('Required').min(3).max(30),
-      postal_code: yup.string().required('Required').min(3).max(30),
+    password: Yup.string().min(8, 'Password must be at least 8 characters'), // Remove 'required' for password
+    role: Yup.string().required('Required').min(3),
+    address: Yup.object().shape({
+      country: Yup.string().required('Required').min(3).max(30),
+      city: Yup.string().required('Required').min(3).max(30),
+      house: Yup.string().required('Required').min(3).max(30),
+      postal_code: Yup.string().required('Required').min(3).max(30),
     }),
-    number: yup.string().required('Required').min(11).max(13),
+    number: Yup.string().required('Required').min(11).max(13),
   });
 
   const formik = useFormik({
@@ -61,11 +69,11 @@ const Update = () => {
     onSubmit: (values) => {
       console.log(values, 'valuessssssssssssssssssssss');
       axiosInstance
-        .put(`/user/${userId}`, values) // Assuming a PUT request for updating the user
+        .put(`/user/${id}`,values) // Assuming a PUT request for updating the user
         .then((response) => {
-          console.log('Form submitted successfully:', response.data);
+          console.log('Form submitted successfully:', response.data.message);
           toast.success('User updated successfully');
-          navigate(-1);
+          navigate(`/users`);
         })
         .catch((error) => {
           console.error('Error submitting form:', error);
