@@ -4,10 +4,11 @@ import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
-
+import { useErrorBoundary } from 'react-error-boundary';
 import * as Yup from 'Yup';
 
 const ProductUpdate = () => {
+   const setBoundary = useErrorBoundary();
   const { id } = useParams();
   console.log(id);
   const [productdata, productsetData] = useState({});
@@ -27,6 +28,7 @@ const ProductUpdate = () => {
       })
       .catch((err) => {
         console.log(err);
+          setBoundary(err);
       });
   }, []);
 
@@ -48,6 +50,7 @@ const ProductUpdate = () => {
       })
       .catch((err) => {
         console.log(err);
+          setBoundary(err);
       });
   }, []);
 

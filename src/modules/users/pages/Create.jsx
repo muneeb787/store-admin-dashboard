@@ -5,7 +5,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import * as Yup from 'Yup';
+import { useErrorBoundary } from 'react-error-boundary';
 const Create = () => {
+  const setBoundary = useErrorBoundary();
   const navigate = useNavigate();
   const axiosInstance = useAxios();
   useEffect(() => {
@@ -22,6 +24,7 @@ const Create = () => {
       })
       .catch((err) => {
         console.log(err);
+        setBoundary(err);
       });
   }, []);
 

@@ -4,10 +4,11 @@ import useAxios from '../../../hooks/axios';
 import Loader from '../../../components/lodaer';
 import ViewUserDetails from '../components/ViewUserDetails';
 import { toast } from 'react-toastify';
+import { useErrorBoundary } from 'react-error-boundary';
 
 const ViewIndex = () => {
   const navigate = useNavigate();
-
+   const setBoundary = useErrorBoundary();
   const [users, setUsers] = useState([]);
   const [loader, setLoader] = useState(true);
   const [showUser, setShowUser] = useState(false);
@@ -31,6 +32,7 @@ const ViewIndex = () => {
       })
       .catch((err) => {
         console.log(err);
+          setBoundary(err);
       })
       .finally(() => {
         setLoader(false);
@@ -55,6 +57,7 @@ const ViewIndex = () => {
       })
       .catch((err) => {
         console.log(err);
+        setBoundary(err);
       })
       .finally(() => {
         setLoader(false);
@@ -92,7 +95,7 @@ const ViewIndex = () => {
                   {users.map((user, index) => {
                   //console.log(`user id : ${user._id}, index :${index}`)
                   return (                    
-                    <tr>
+                    <tr >
                       <td className="border-b border-[#eee] py-5 dark:border-strokedark xl:pl-11">
                         <h5 className="font-medium text-black dark:text-white">
                           {index + 1}

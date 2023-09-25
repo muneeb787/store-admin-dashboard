@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxios from "../../../hooks/axios";
 import { toast } from "react-toastify";
-
+import { useErrorBoundary } from 'react-error-boundary';
 
 
 const ProductList = () => {
@@ -10,6 +10,7 @@ const ProductList = () => {
   const axiosInstance = useAxios();
   const [data, setData] = useState([]);
   const navigate = useNavigate();
+   const setBoundary = useErrorBoundary();
 
   const fetchData = () => {
     axiosInstance.get("/products")
@@ -18,6 +19,7 @@ const ProductList = () => {
         setData(res.data);
       })
       .catch((err) => {
+        setBoundary(err);
         console.log(err);
       });
   }
@@ -32,6 +34,7 @@ const ProductList = () => {
       })
       .catch((err) => {
         console.log(err);
+        setBoundary(err);
         toast.error("An error occurred");
       });
   };

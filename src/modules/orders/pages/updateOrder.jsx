@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useErrorBoundary } from 'react-error-boundary';
 
 const UpdateOrder = () => {
+   const setBoundary = useErrorBoundary();
     const [orderData, setOrderData] = useState({
         productName: '',
         orderQuantity: '',
@@ -24,7 +26,8 @@ const UpdateOrder = () => {
             console.log('Order updated successfully:', response.data);
         }
         catch(error) {
-            console.error('Error updating order:', error);
+          console.error('Error updating order:', error);
+            setBoundary(error);
         }
     };
   return (

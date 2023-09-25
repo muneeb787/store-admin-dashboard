@@ -4,10 +4,13 @@ import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { useErrorBoundary } from 'react-error-boundary';
 
 import * as Yup from 'Yup';
 
 const Create = () => {
+  const setBoundary = useErrorBoundary();
+  
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (event) => {
@@ -32,6 +35,7 @@ const Create = () => {
       })
       .catch((err) => {
         console.log(err);
+          setBoundary(err);
       });
   }, []);
 

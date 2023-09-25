@@ -4,10 +4,11 @@ import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import * as Yup from 'Yup';
-
+import { useErrorBoundary } from 'react-error-boundary';
 const Update = () => {
   const navigate = useNavigate();
   const axiosInstance = useAxios();
+   const setBoundary = useErrorBoundary();
   const { id } = useParams(); // Assuming you have a route parameter for the user ID
   console.log(`user id : ${id}`);
 
@@ -32,6 +33,7 @@ const Update = () => {
       })
       .catch((err) => {
         console.error(err);
+          setBoundary(err);
       });
   }, [axiosInstance, id]);
 
@@ -77,6 +79,7 @@ const Update = () => {
         })
         .catch((error) => {
           console.error('Error submitting form:', error);
+          setBoundary(error)
         });
     },
   });

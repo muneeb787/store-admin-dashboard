@@ -1,12 +1,14 @@
 import { Field, FormikProvider, useFormik } from 'formik';
 import useAxios from '../../../hooks/axios';
 import { toast } from 'react-toastify';
+import { useErrorBoundary } from 'react-error-boundary';
 // import { useNavigate, useParams } from "react-router-dom";
 
 import * as Yup from 'Yup';
 import { useEffect } from 'react';
 
 const Category = () => {
+   const setBoundary = useErrorBoundary();
   useEffect(() => {
     if (
       !localStorage.getItem('token') ||
@@ -38,6 +40,7 @@ const Category = () => {
         })
         .catch((error) => {
           console.error('Error submitting form:', error);
+            setBoundary(error);
           // You can handle error actions here
         })
         .finally(() => {

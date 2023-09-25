@@ -5,13 +5,14 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ErrorBoundary } from 'react-error-boundary';
 import FetchingError from './components/FetchingError';
+import handleError from './components/HandleError';
 
 function App() {
   // started new repo Muhammad/Error-Handling-React
   return (
     <>
       <ToastContainer />
-      <ErrorBoundary FallbackComponent={FetchingError} >
+      <ErrorBoundary FallbackComponent={FetchingError} onError={handleError} >
         <Routes>
           {NonLayoutRoutes.map((elem) => (
             <Route path={elem.path} element={elem.element} />

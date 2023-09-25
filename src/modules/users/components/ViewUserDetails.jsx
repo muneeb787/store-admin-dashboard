@@ -1,7 +1,9 @@
 import React, { useState, useEffect} from 'react';
 import useAxios from '../../../hooks/axios';
+import { useErrorBoundary } from 'react-error-boundary';
 
 const ViewUserDetails = () => {
+   const setBoundary = useErrorBoundary();
       const [users, setUsers] = useState([]);
 
       useEffect(() => {
@@ -15,6 +17,7 @@ const ViewUserDetails = () => {
           })
           .catch((err) => {
             console.log(err);
+              setBoundary(err);
           })
       }, []);
     return (

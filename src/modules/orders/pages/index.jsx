@@ -3,12 +3,14 @@ import Loader from '../../../components/lodaer';
 import useAxios from '../../../hooks/axios';
 import { useNavigate } from 'react-router-dom';
 import ViewOrder from './viewOrder';
+import { useErrorBoundary } from 'react-error-boundary';
 const OrderIndex = () => {
   const [orders, setOrders] = useState([]);
   const [loader, setLoader] = useState(true);
   const [dataFetched, setDataFetched] = useState(false);
   const navigate = useNavigate();
   const axiosInstance = useAxios();
+   const setBoundary = useErrorBoundary();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,6 +22,7 @@ const OrderIndex = () => {
         setLoader(false); // new line of code for non-repeatition of fetching
       } catch (error) {
         console.error('Error fetching Data', error);
+          setBoundary(error);
       } finally {
         setLoader(false);
       }
@@ -47,6 +50,7 @@ const OrderIndex = () => {
       // }
     } catch (error) {
       console.error('Error deleting order', error);
+        setBoundary(error);
     }
   };
 
